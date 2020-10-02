@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Spectra</class>
+ <widget class="QWidget" name="Spectra">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1100</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>30</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Directory</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>50</y>
+     <width>281</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLineEdit" name="directory_name">
+      <property name="text">
+       <string>C:/</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QToolButton" name="toolButton">
+      <property name="text">
+       <string>...</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="start">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>140</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="convert">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>180</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Convert</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>530</y>
+     <width>297</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QComboBox" name="sfera">
+      <item>
+       <property name="text">
+        <string>SFERA 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 4</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>SFERA 12</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="comboBox">
+      <item>
+       <property name="text">
+        <string>Channel 1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 2</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 3</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 4</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 5</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 6</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 7</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 8</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 9</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 10</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 11</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 12</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 13</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 14</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 15</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Channel 16</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Refresh</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLineEdit" name="file_name">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>50</y>
+     <width>113</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test_spectra</string>
+   </property>
+  </widget>
+  <widget class="LCDNumber" name="lcd_display">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>130</y>
+     <width>181</width>
+     <height>71</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>30</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>File Name</string>
+   </property>
+  </widget>
+  <widget class="QTextBrowser" name="logger">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>240</y>
+     <width>301</width>
+     <height>321</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>500</x>
+     <y>30</y>
+     <width>561</width>
+     <height>491</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="Plot">
+    <attribute name="title">
+     <string>Plot</string>
+    </attribute>
+    <widget class="QCustomPlot" name="widget" native="true">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>50</y>
+       <width>391</width>
+       <height>401</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="Real_time">
+    <attribute name="title">
+     <string>Real_time</string>
+    </attribute>
+    <widget class="QCustomPlot" name="widget_2" native="true">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>50</y>
+       <width>471</width>
+       <height>401</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="set_file">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>80</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Set File</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header>qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>LCDNumber</class>
+   <extends>QLCDNumber</extends>
+   <header>lcdnumber.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
