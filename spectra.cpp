@@ -554,7 +554,9 @@ void Spectra::acquire()
     qDebug()<< "iniziata acquisizione";
 
     FILE * pFile;
-    FILE * rFile;
+    int n_files=0;
+    int bytes_threshold_files=0;
+
     FT_HANDLE ftHandle;
     FT_STATUS res;
     DWORD num;
@@ -606,9 +608,9 @@ void Spectra::acquire()
     res =FT_ClrDtr(ftHandle);
     res= FT_SetDtr(ftHandle);
 
-    std::string binfile=dirname+"/"+filename+".bin";
+    std::string binfile=dirname+"/"+filename+std::to_string(n_files)+".bin";
     pFile = fopen ( binfile.c_str(), "w+b");
-    rFile = fopen ( binfile.c_str(), "w+b");
+
 
    RxBuffer_char= new unsigned char[DIM_QUEUE];
    queue_num=0;
@@ -623,6 +625,16 @@ void Spectra::acquire()
 
     while(acquisition_flag==1)
     {
+
+        if(bytes_threshold_files>2000000000)
+        {
+            n_files++;
+            binfile=dirname+"/"+filename+std::to_string(n_files)+".bin";
+            fclose(pFile);
+            pFile = fopen ( binfile.c_str(), "w+b");
+            bytes_threshold_files=0;
+        }
+
         FT_GetQueueStatus (ftHandle, &bytes_in_queue); //scrive in bytes_in_queue il numero di bytes sul buffer di ricezione
 
         if(bytes_in_queue>=8000 && (bytes_in_queue%4==0))
@@ -631,6 +643,7 @@ void Spectra::acquire()
             res = FT_Read(ftHandle,RxBuffer_char,bytes_in_queue,&RxBytes); //leggo il buffer di ricezione e lo scrive in RxBuffer
             fwrite(RxBuffer_char, bytes_in_queue*sizeof(char),1,pFile);
             queue_num= queue_num+bytes_in_queue;
+            bytes_threshold_files=bytes_threshold_files+bytes_in_queue;
             //qDebug()<<"bla:"+QString::number(bytes_in_queue);
 
         }
