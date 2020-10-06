@@ -137,8 +137,10 @@ void Spectra::on_convert_clicked()
     sfera_address= new unsigned int[DIM_QUEUE];
     buffer_memory_char= new unsigned char[DIM_QUEUE];
     RxBuffer_char= new unsigned char[DIM_QUEUE];
+    int n_files_convert=0;
 
-    std::string binfile=dirname+"/"+filename+".bin";
+
+    std::string binfile=dirname+"/"+filename+std::to_string(n_files_convert)+".bin";
     std::string txtfile01=dirname+"/"+filename+"_01.txt";
     std::string txtfile02=dirname+"/"+filename+"_02.txt";
     std::string txtfile03=dirname+"/"+filename+"_03.txt";
@@ -187,25 +189,11 @@ void Spectra::on_convert_clicked()
     std::string txtfile46=dirname+"/"+filename+"_46.txt";
     std::string txtfile47=dirname+"/"+filename+"_47.txt";
     std::string txtfile48=dirname+"/"+filename+"_48.txt";
+
+
     std::string txtfile_timestamp=dirname+"/"+filename+"_timestamp.txt";
 
 
-    qDebug()<<binfile.c_str();
-    pFile_read = fopen (binfile.c_str(), "rb");
-
-     if (pFile_read==NULL)
-     {
-         qDebug()<<"nope";
-         fputs ("File error",stderr);
-         ui->logger->append("Error opening the file");
-         exit (1);
-     }
-     else
-     {
-         qDebug()<<"ok";
-         fputs ("File ok\n",stderr);
-         ui->logger->append("Reading file"+QString::fromStdString(binfile));
-     }
 
      pFile_timestamp = fopen(txtfile_timestamp.c_str(), "wb");
      pFile_write_01 = fopen ( txtfile01.c_str(), "wb");
@@ -258,6 +246,13 @@ void Spectra::on_convert_clicked()
      pFile_write_48 = fopen ( txtfile48.c_str(), "wb");
 
 
+     qDebug()<<binfile.c_str();
+     pFile_read = fopen (binfile.c_str(), "rb");
+
+     while(pFile_read!=NULL)
+     {
+
+     ui->logger->append("Reading file"+QString::fromStdString(binfile));
      fseeko64 (pFile_read , 0 , SEEK_END);
      long long lSize = ftello64 (pFile_read);
      rewind (pFile_read);
@@ -300,6 +295,15 @@ void Spectra::on_convert_clicked()
      n_eventi=lSize/192;
      qDebug()<<"eventi catturati:"<<n_eventi;
 
+      fclose(pFile_read);
+
+     n_files_convert++;
+     binfile=dirname+"/"+filename+std::to_string(n_files_convert)+".bin";
+
+     pFile_read = fopen (binfile.c_str(), "rb");
+
+    }
+     n_files_convert=0;
 
      for(int y=0;y<16384;y++)
          fprintf (pFile_write_01, "%li, ",bin[1][y]);
@@ -399,8 +403,11 @@ void Spectra::on_convert_clicked()
          fprintf (pFile_write_48, "%li, ",bin3[16][y]);
 
 
+
+
      qDebug()<<"finito";
      ui->logger->append("Finito");
+
 
      fclose(pFile_write_01);
      fclose(pFile_write_02);
@@ -450,7 +457,7 @@ void Spectra::on_convert_clicked()
      fclose(pFile_write_46);
      fclose(pFile_write_47);
      fclose(pFile_write_48);
-     fclose(pFile_read);
+     //fclose(pFile_read);
      fclose(pFile_timestamp);
 }
 
