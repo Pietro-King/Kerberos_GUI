@@ -138,9 +138,10 @@ void Spectra::on_convert_clicked()
     buffer_memory_char= new unsigned char[DIM_QUEUE];
     RxBuffer_char= new unsigned char[DIM_QUEUE];
     int n_files_convert=0;
+    std::string file_number_string_convert= std::string(8,'0');
 
 
-    std::string binfile=dirname+"/"+filename+std::to_string(n_files_convert)+".bin";
+    std::string binfile=dirname+"/"+filename+"_"+file_number_string_convert+".bin";
     std::string txtfile01=dirname+"/"+filename+"_01.txt";
     std::string txtfile02=dirname+"/"+filename+"_02.txt";
     std::string txtfile03=dirname+"/"+filename+"_03.txt";
@@ -298,7 +299,9 @@ void Spectra::on_convert_clicked()
       fclose(pFile_read);
 
      n_files_convert++;
-     binfile=dirname+"/"+filename+std::to_string(n_files_convert)+".bin";
+     std::string number_no_leading_zeros_convert= std::to_string(n_files_convert);
+     file_number_string_convert = std::string(8 - number_no_leading_zeros_convert.length(), '0') + number_no_leading_zeros_convert;
+     binfile=binfile=dirname+"/"+filename+"_"+file_number_string_convert+".bin";
 
      pFile_read = fopen (binfile.c_str(), "rb");
 
@@ -614,8 +617,9 @@ void Spectra::acquire()
 
     res =FT_ClrDtr(ftHandle);
     res= FT_SetDtr(ftHandle);
-
-    std::string binfile=dirname+"/"+filename+std::to_string(n_files)+".bin";
+    std::string file_number_string= std::string(8,'0');
+    std::string binfile=dirname+"/"+filename+"_"+file_number_string+".bin";
+    //std::string binfile=dirname+"/"+filename+"_"+std::to_string(n_files)+".bin";
     pFile = fopen ( binfile.c_str(), "w+b");
 
 
@@ -633,10 +637,13 @@ void Spectra::acquire()
     while(acquisition_flag==1)
     {
 
-        if(bytes_threshold_files>2000000000)
+
+        if(bytes_threshold_files>500000000)
         {
             n_files++;
-            binfile=dirname+"/"+filename+std::to_string(n_files)+".bin";
+            std::string number_no_leading_zeros= std::to_string(n_files);
+            file_number_string = std::string(8 - number_no_leading_zeros.length(), '0') + number_no_leading_zeros;
+            binfile=dirname+"/"+filename+"_"+file_number_string+".bin";
             fclose(pFile);
             pFile = fopen ( binfile.c_str(), "w+b");
             bytes_threshold_files=0;
