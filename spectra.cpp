@@ -655,7 +655,10 @@ void Spectra::acquire()
         {
             QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
             res = FT_Read(ftHandle,RxBuffer_char,bytes_in_queue,&RxBytes); //leggo il buffer di ricezione e lo scrive in RxBuffer
-            fwrite(RxBuffer_char, bytes_in_queue*sizeof(char),1,pFile);
+            if (ui->write_mode->currentIndex()==0)
+            {
+                fwrite(RxBuffer_char, bytes_in_queue*sizeof(char),1,pFile);
+            }
             queue_num= queue_num+bytes_in_queue;
             bytes_threshold_files=bytes_threshold_files+bytes_in_queue;
             //qDebug()<<"bla:"+QString::number(bytes_in_queue);
@@ -730,6 +733,11 @@ void Spectra::realtimePlot()
     ui->widget_2->graph(0)->setData(x_rt, y_rt);
     ui->widget_2->rescaleAxes();
     ui->widget_2->replot();
+
+    if (ui->write_mode->currentIndex()==1)
+    {
+
+    }
 }
 
 

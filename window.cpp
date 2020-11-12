@@ -9,7 +9,7 @@ Window::Window(QWidget *parent) :
     QVBoxLayout *layout = new QVBoxLayout();
 
     this->setWindowTitle("Kerberos GUI");
-    this->resize(1280,720);
+    this->resize(1350,800);
 
     QTabWidget *tab=new QTabWidget;
     Program_tab* program_tab = new Program_tab;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1100</width>
-    <height>621</height>
+    <width>1280</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,7 +80,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>120</y>
+     <y>140</y>
      <width>214</width>
      <height>429</height>
     </rect>
@@ -2149,7 +2149,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>560</y>
+     <y>580</y>
      <width>102</width>
      <height>20</height>
     </rect>
@@ -2242,7 +2242,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>560</y>
+     <y>580</y>
      <width>102</width>
      <height>23</height>
     </rect>
@@ -2274,9 +2274,9 @@
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>484</y>
-     <width>140</width>
-     <height>65</height>
+     <y>514</y>
+     <width>144</width>
+     <height>74</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -2308,8 +2308,8 @@
     <rect>
      <x>360</x>
      <y>90</y>
-     <width>65</width>
-     <height>203</height>
+     <width>68</width>
+     <height>230</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -2382,9 +2382,9 @@
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>330</y>
-     <width>100</width>
-     <height>65</height>
+     <y>360</y>
+     <width>103</width>
+     <height>74</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -2415,7 +2415,7 @@
    <property name="geometry">
     <rect>
      <x>359</x>
-     <y>310</y>
+     <y>340</y>
      <width>101</width>
      <height>16</height>
     </rect>
@@ -2434,9 +2434,9 @@
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>410</y>
-     <width>107</width>
-     <height>65</height>
+     <y>440</y>
+     <width>112</width>
+     <height>74</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -2466,18 +2466,18 @@
   <widget class="QTextBrowser" name="logview">
    <property name="geometry">
     <rect>
-     <x>760</x>
-     <y>60</y>
-     <width>291</width>
-     <height>511</height>
+     <x>810</x>
+     <y>70</y>
+     <width>411</width>
+     <height>551</height>
     </rect>
    </property>
   </widget>
   <widget class="QPushButton" name="default_prog">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>420</y>
+     <x>610</x>
+     <y>410</y>
      <width>121</width>
      <height>41</height>
     </rect>
@@ -2489,7 +2489,7 @@
   <widget class="QPushButton" name="program_button">
    <property name="geometry">
     <rect>
-     <x>520</x>
+     <x>560</x>
      <y>180</y>
      <width>211</width>
      <height>211</height>
@@ -2508,8 +2508,8 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>590</y>
-     <width>761</width>
+     <y>660</y>
+     <width>1181</width>
      <height>23</height>
     </rect>
    </property>
@@ -2521,7 +2521,7 @@
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>530</y>
+     <y>550</y>
      <width>63</width>
      <height>17</height>
     </rect>

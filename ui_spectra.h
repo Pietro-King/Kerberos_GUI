@@ -53,12 +53,14 @@ public:
     QWidget *Real_time;
     QCustomPlot *widget_2;
     QPushButton *set_file;
+    QComboBox *write_mode;
+    QLabel *label;
 
     void setupUi(QWidget *Spectra)
     {
         if (Spectra->objectName().isEmpty())
             Spectra->setObjectName(QStringLiteral("Spectra"));
-        Spectra->resize(1100, 600);
+        Spectra->resize(1280, 720);
         label_2 = new QLabel(Spectra);
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(60, 30, 81, 16));
@@ -80,13 +82,13 @@ public:
 
         start = new QPushButton(Spectra);
         start->setObjectName(QStringLiteral("start"));
-        start->setGeometry(QRect(100, 140, 75, 23));
+        start->setGeometry(QRect(90, 200, 75, 23));
         convert = new QPushButton(Spectra);
         convert->setObjectName(QStringLiteral("convert"));
-        convert->setGeometry(QRect(100, 180, 75, 23));
+        convert->setGeometry(QRect(90, 240, 75, 23));
         layoutWidget_2 = new QWidget(Spectra);
         layoutWidget_2->setObjectName(QStringLiteral("layoutWidget_2"));
-        layoutWidget_2->setGeometry(QRect(440, 530, 297, 30));
+        layoutWidget_2->setGeometry(QRect(570, 660, 431, 30));
         horizontalLayout_2 = new QHBoxLayout(layoutWidget_2);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
@@ -110,35 +112,41 @@ public:
         file_name->setGeometry(QRect(350, 50, 113, 20));
         lcd_display = new LCDNumber(Spectra);
         lcd_display->setObjectName(QStringLiteral("lcd_display"));
-        lcd_display->setGeometry(QRect(250, 130, 181, 71));
+        lcd_display->setGeometry(QRect(240, 190, 181, 71));
         label_3 = new QLabel(Spectra);
         label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setGeometry(QRect(350, 30, 47, 13));
         logger = new QTextBrowser(Spectra);
         logger->setObjectName(QStringLiteral("logger"));
-        logger->setGeometry(QRect(40, 240, 301, 321));
+        logger->setGeometry(QRect(70, 310, 351, 391));
         tabWidget = new QTabWidget(Spectra);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(500, 30, 561, 491));
+        tabWidget->setGeometry(QRect(480, 20, 800, 600));
         Plot = new QWidget();
         Plot->setObjectName(QStringLiteral("Plot"));
         widget = new QCustomPlot(Plot);
         widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(50, 50, 391, 401));
+        widget->setGeometry(QRect(30, 30, 700, 500));
         tabWidget->addTab(Plot, QString());
         Real_time = new QWidget();
         Real_time->setObjectName(QStringLiteral("Real_time"));
         widget_2 = new QCustomPlot(Real_time);
         widget_2->setObjectName(QStringLiteral("widget_2"));
-        widget_2->setGeometry(QRect(30, 50, 471, 401));
+        widget_2->setGeometry(QRect(30, 30, 700, 500));
         tabWidget->addTab(Real_time, QString());
         set_file = new QPushButton(Spectra);
         set_file->setObjectName(QStringLiteral("set_file"));
-        set_file->setGeometry(QRect(220, 80, 75, 23));
+        set_file->setGeometry(QRect(210, 100, 75, 23));
+        write_mode = new QComboBox(Spectra);
+        write_mode->setObjectName(QStringLiteral("write_mode"));
+        write_mode->setGeometry(QRect(210, 130, 144, 22));
+        label = new QLabel(Spectra);
+        label->setObjectName(QStringLiteral("label"));
+        label->setGeometry(QRect(120, 130, 42, 22));
 
         retranslateUi(Spectra);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(Spectra);
@@ -192,6 +200,12 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(Plot), QApplication::translate("Spectra", "Plot", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(Real_time), QApplication::translate("Spectra", "Real_time", Q_NULLPTR));
         set_file->setText(QApplication::translate("Spectra", "Set File", Q_NULLPTR));
+        write_mode->clear();
+        write_mode->insertItems(0, QStringList()
+         << QApplication::translate("Spectra", "List Mode", Q_NULLPTR)
+         << QApplication::translate("Spectra", "Spectra Mode", Q_NULLPTR)
+        );
+        label->setText(QApplication::translate("Spectra", "Write in:", Q_NULLPTR));
     } // retranslateUi
 
 };

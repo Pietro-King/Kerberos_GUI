@@ -115,7 +115,7 @@ public:
     {
         if (Program_tab->objectName().isEmpty())
             Program_tab->setObjectName(QStringLiteral("Program_tab"));
-        Program_tab->resize(1100, 621);
+        Program_tab->resize(1280, 720);
         title = new QLabel(Program_tab);
         title->setObjectName(QStringLiteral("title"));
         title->setGeometry(QRect(380, 10, 351, 41));
@@ -142,7 +142,7 @@ public:
         mode_of_readout->setFont(font1);
         layoutWidget = new QWidget(Program_tab);
         layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
-        layoutWidget->setGeometry(QRect(40, 120, 214, 429));
+        layoutWidget->setGeometry(QRect(40, 140, 214, 429));
         verticalLayout_8 = new QVBoxLayout(layoutWidget);
         verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
         verticalLayout_8->setContentsMargins(0, 0, 0, 0);
@@ -363,10 +363,10 @@ public:
 
         THR_CUBE = new QComboBox(Program_tab);
         THR_CUBE->setObjectName(QStringLiteral("THR_CUBE"));
-        THR_CUBE->setGeometry(QRect(40, 560, 102, 20));
+        THR_CUBE->setGeometry(QRect(40, 580, 102, 20));
         label_30 = new QLabel(Program_tab);
         label_30->setObjectName(QStringLiteral("label_30"));
-        label_30->setGeometry(QRect(150, 560, 102, 23));
+        label_30->setGeometry(QRect(150, 580, 102, 23));
         label_31 = new QLabel(Program_tab);
         label_31->setObjectName(QStringLiteral("label_31"));
         label_31->setGeometry(QRect(359, 70, 141, 16));
@@ -376,7 +376,7 @@ public:
         label_31->setFont(font2);
         layoutWidget_2 = new QWidget(Program_tab);
         layoutWidget_2->setObjectName(QStringLiteral("layoutWidget_2"));
-        layoutWidget_2->setGeometry(QRect(360, 484, 140, 65));
+        layoutWidget_2->setGeometry(QRect(360, 514, 144, 74));
         verticalLayout_5 = new QVBoxLayout(layoutWidget_2);
         verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
         verticalLayout_5->setContentsMargins(0, 0, 0, 0);
@@ -397,7 +397,7 @@ public:
 
         layoutWidget_3 = new QWidget(Program_tab);
         layoutWidget_3->setObjectName(QStringLiteral("layoutWidget_3"));
-        layoutWidget_3->setGeometry(QRect(360, 90, 65, 203));
+        layoutWidget_3->setGeometry(QRect(360, 90, 68, 230));
         verticalLayout_3 = new QVBoxLayout(layoutWidget_3);
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         verticalLayout_3->setContentsMargins(0, 0, 0, 0);
@@ -448,7 +448,7 @@ public:
 
         layoutWidget_4 = new QWidget(Program_tab);
         layoutWidget_4->setObjectName(QStringLiteral("layoutWidget_4"));
-        layoutWidget_4->setGeometry(QRect(360, 330, 100, 65));
+        layoutWidget_4->setGeometry(QRect(360, 360, 103, 74));
         verticalLayout = new QVBoxLayout(layoutWidget_4);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
@@ -469,11 +469,11 @@ public:
 
         label = new QLabel(Program_tab);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(359, 310, 101, 16));
+        label->setGeometry(QRect(359, 340, 101, 16));
         label->setFont(font2);
         layoutWidget_5 = new QWidget(Program_tab);
         layoutWidget_5->setObjectName(QStringLiteral("layoutWidget_5"));
-        layoutWidget_5->setGeometry(QRect(360, 410, 107, 65));
+        layoutWidget_5->setGeometry(QRect(360, 440, 112, 74));
         verticalLayout_4 = new QVBoxLayout(layoutWidget_5);
         verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         verticalLayout_4->setContentsMargins(0, 0, 0, 0);
@@ -494,23 +494,23 @@ public:
 
         logview = new QTextBrowser(Program_tab);
         logview->setObjectName(QStringLiteral("logview"));
-        logview->setGeometry(QRect(760, 60, 291, 511));
+        logview->setGeometry(QRect(810, 70, 411, 551));
         default_prog = new QPushButton(Program_tab);
         default_prog->setObjectName(QStringLiteral("default_prog"));
-        default_prog->setGeometry(QRect(570, 420, 121, 41));
+        default_prog->setGeometry(QRect(610, 410, 121, 41));
         program_button = new QPushButton(Program_tab);
         program_button->setObjectName(QStringLiteral("program_button"));
-        program_button->setGeometry(QRect(520, 180, 211, 211));
+        program_button->setGeometry(QRect(560, 180, 211, 211));
         QFont font3;
         font3.setPointSize(25);
         program_button->setFont(font3);
         progressBar = new QProgressBar(Program_tab);
         progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setGeometry(QRect(40, 590, 761, 23));
+        progressBar->setGeometry(QRect(40, 660, 1181, 23));
         progressBar->setValue(24);
         NO_SELECT = new QCheckBox(Program_tab);
         NO_SELECT->setObjectName(QStringLiteral("NO_SELECT"));
-        NO_SELECT->setGeometry(QRect(260, 530, 63, 17));
+        NO_SELECT->setGeometry(QRect(260, 550, 63, 17));
 
         retranslateUi(Program_tab);
 
