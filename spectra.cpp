@@ -633,11 +633,9 @@ void Spectra::acquire()
        qDebug()<<"Start Acquisition";
     }
     acquisition_flag=1;
-
+    int write_mode=ui->write_mode->currentIndex();
     while(acquisition_flag==1)
     {
-
-
         if(bytes_threshold_files>500000000)
         {
             n_files++;
@@ -655,10 +653,12 @@ void Spectra::acquire()
         {
             QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
             res = FT_Read(ftHandle,RxBuffer_char,bytes_in_queue,&RxBytes); //leggo il buffer di ricezione e lo scrive in RxBuffer
-            if (ui->write_mode->currentIndex()==0)
+
+            if (write_mode==0)
             {
                 fwrite(RxBuffer_char, bytes_in_queue*sizeof(char),1,pFile);
             }
+
             queue_num= queue_num+bytes_in_queue;
             bytes_threshold_files=bytes_threshold_files+bytes_in_queue;
             //qDebug()<<"bla:"+QString::number(bytes_in_queue);
@@ -736,6 +736,31 @@ void Spectra::realtimePlot()
 
     if (ui->write_mode->currentIndex()==1)
     {
+        std::string spectra_filename[49];
+        FILE * fileSpectra[49];
+        for (int i=1;i<49;i++)
+        {
+            if (i<10)
+                spectra_filename[i]=dirname+"/"+filename+"_sp_0"+std::to_string(i)+".txt";
+            else
+                spectra_filename[i]=dirname+"/"+filename+"_sp_"+std::to_string(i)+".txt";
+
+            fileSpectra[i] =fopen( spectra_filename[i].c_str(), "w");
+        }
+
+
+        for (int i=1;i<17;i++)
+            for(int y=0;y<16384;y++)
+                fprintf (fileSpectra[i], "%li, ",spectra1_rt[i][y]);
+        for (int i=17;i<33;i++)
+            for(int y=0;y<16384;y++)
+                fprintf (fileSpectra[i], "%li, ",spectra2_rt[i-16][y]);
+        for (int i=33;i<49;i++)
+            for(int y=0;y<16384;y++)
+                fprintf (fileSpectra[i], "%li, ",spectra3_rt[i-32][y]);
+
+        for (int i=1;i<49;i++)
+            fclose(fileSpectra[i]);
 
     }
 }
