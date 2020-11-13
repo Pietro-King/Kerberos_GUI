@@ -5,9 +5,11 @@ INPUT(
 ./release\program_tab.o
 ./release\spectra.o
 ./release\qcustomplot.o
+./release\timed_spectra.o
 ./release\moc_window.o
 ./release\moc_program_tab.o
 ./release\moc_spectra.o
 ./release\moc_lcdnumber.o
 ./release\moc_qcustomplot.o
+./release\moc_timed_spectra.o
 );

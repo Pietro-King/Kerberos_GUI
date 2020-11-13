@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     sfera_spi_bits.cpp \
     program_tab.cpp \
     spectra.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    timed_spectra.cpp
 win32:CONFIG(release, debug|release):LIBS += -L$$PWD/ -lftd2xx
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/ -lftd2xx
 else:unix: LIBS += -L$$PWD/ -lftd2xx
@@ -40,7 +41,8 @@ FORMS += \
     window.ui \
     program_tab.ui \
     spectra.ui \
-    acquire.ui
+    acquire.ui \
+    timed_spectra.ui
 
 HEADERS += \
     window.h \
@@ -49,4 +51,5 @@ HEADERS += \
     program_tab.h \
     spectra.h \
     lcdnumber.h \
-    qcustomplot.h
+    qcustomplot.h \
+    timed_spectra.h

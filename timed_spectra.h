@@ -1,5 +1,5 @@
-#ifndef SPECTRA_H
-#define SPECTRA_H
+#ifndef TIMED_SPECTRA_H
+#define TIMED_SPECTRA_H
 
 #include <QWidget>
 #include <acquire.h>
@@ -12,16 +12,17 @@
 #include <QVector>
 #include <iostream>
 
+
 namespace Ui {
-class Spectra;
+class timed_spectra;
 }
 
-class Spectra : public QWidget
+class timed_spectra : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Spectra(QWidget *parent = 0);
+    explicit timed_spectra(QWidget *parent = 0);
     std::string filename;
     std::string dirname;
     int tristate_button=0;
@@ -38,6 +39,7 @@ public:
     std::array < std::array <double,16384>,17> spectra2_rt;
     std::array < std::array <double,16384>,17> spectra3_rt;
 
+    int num_of_repetitions=1;
 
 
 
@@ -117,8 +119,7 @@ public:
     FILE * pFile_write_48;
     FILE * pFile_timestamp;
     FILE * pFile_read;
-
-    ~Spectra();
+    ~timed_spectra();
 
     void realtimePlot_call();
     void acquire();
@@ -141,8 +142,12 @@ private slots:
 
     void realtimePlot();
 
+    void on_set_time_clicked();
+
+    void on_set_repetitions_clicked();
+
 private:
-    Ui::Spectra *ui;
+    Ui::timed_spectra *ui;
 };
 
-#endif // SPECTRA_H
+#endif // TIMED_SPECTRA_H

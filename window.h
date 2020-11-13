@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <program_tab.h>
 #include <spectra.h>
+#include <timed_spectra.h>
 
 namespace Ui {
 class Window;

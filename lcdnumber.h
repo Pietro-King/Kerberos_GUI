@@ -14,6 +14,7 @@ class LCDNumber: public QLCDNumber
   QTimer* timer;
   QTime*  timeValue;
   int flag=0;
+  int forward_reverse=0;
 
   public:
     LCDNumber(QWidget * parentWidget)
@@ -31,13 +32,27 @@ class LCDNumber: public QLCDNumber
    public slots:
     void setDisplay()
     {
-      this->timeValue->setHMS(this->timeValue->addSecs(1).hour(),this->timeValue->addSecs(1).minute(),this->timeValue->addSecs(1).second());
-      this->display(this->timeValue->toString("HH:mm:ss"));
+        if (forward_reverse==0)
+        {
+        this->timeValue->setHMS(this->timeValue->addSecs(1).hour(),this->timeValue->addSecs(1).minute(),this->timeValue->addSecs(1).second());
+        this->display(this->timeValue->toString("HH:mm:ss"));
+        }
+        if (forward_reverse==1)
+        {
+        this->timeValue->setHMS(this->timeValue->addSecs(-1).hour(),this->timeValue->addSecs(-1).minute(),this->timeValue->addSecs(-1).second());
+        this->display(this->timeValue->toString("HH:mm:ss"));
+        }
     }
     void go()
     {
       this->timer->start(1000);
     }
+
+    void start_stop_reverse_lcdnumber()
+    {
+
+    }
+
     void start_stop_lcdnumber()
     {
         if(this->flag==0){

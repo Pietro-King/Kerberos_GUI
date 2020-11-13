@@ -1,9 +1,9 @@
-#include "spectra.h"
-#include "ui_spectra.h"
+#include "timed_spectra.h"
+#include "ui_timed_spectra.h"
 
-Spectra::Spectra(QWidget *parent) :
+timed_spectra::timed_spectra(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Spectra)
+    ui(new Ui::timed_spectra)
 {
     ui->setupUi(this);
 
@@ -28,8 +28,13 @@ Spectra::Spectra(QWidget *parent) :
     setting.endGroup();
     x_rt.resize(16384);
     y_rt.resize(16384);
-    ui->lcd_display->forward_reverse=0;
 
+
+    ui->spin_repetitions->setValue(1);
+    ui->spin_h->setMaximum(24);
+    ui->spin_m->setMaximum(59);
+    ui->spin_s->setMaximum(59);
+    ui->lcd_display->forward_reverse=1;
 
 
     for (int i=0; i<16384; ++i)
@@ -48,62 +53,61 @@ Spectra::Spectra(QWidget *parent) :
     filename=ui->file_name->text().toStdString();
     dirname=ui->directory_name->text().toStdString();
 
-
 }
 
-Spectra::~Spectra()
+timed_spectra::~timed_spectra()
 {
     delete ui;
 }
 
-void Spectra::on_start_clicked()
+void timed_spectra::on_start_clicked()
 {
-    if (tristate_button==0)
-    {
-        ui->start->setText("Stop");
-        tristate_button=1;
-        ui->logger->clear();
+    ui->lcd_display->start_stop_reverse_lcdnumber();
+
+//    if (tristate_button==0)
+//    {
+//        ui->start->setText("Stop");
+//        tristate_button=1;
+//        ui->logger->clear();
 
 
-        ui->logger->append("Acquisition Started");
+//        ui->logger->append("Acquisition Started");
 
 
-        QFuture<void> acq_thread = QtConcurrent::run([&]{acquire();});
-        QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
-    }
+//        QFuture<void> acq_thread = QtConcurrent::run([&]{acquire();});
+//        QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
+//    }
 
+//    else if (tristate_button==1)
+//    {
+//        ui->start->setText("Reset");
+//        stop();
 
-    else if (tristate_button==1)
-    {
-        ui->start->setText("Reset");
-        stop();
+//        ui->logger->append("");
+//        ui->logger->append("Acquisition Stopped");
+//        ui->logger->append("Acquired "+QString::number(queue_num)+" bytes");
+//        ui->logger->append(QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
 
-        ui->logger->append("");
-        ui->logger->append("Acquisition Stopped");
-        ui->logger->append("Acquired "+QString::number(queue_num)+" bytes");
-        ui->logger->append(QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
+//        tristate_button=2;
+//    }
 
-        tristate_button=2;
+//    else if (tristate_button==2)
+//    {
+//        ui->start->setText("Start");
+//        tristate_button=0;
+//        for (int x=0;x<17;x++)
+//            for(int y=0;y<16384;y++)
+//            {
+//                spectra1_rt[x][y]=0;
+//                spectra2_rt[x][y]=0;
+//                spectra3_rt[x][y]=0;
+//            }
+//    }
 
-
-    }
-
-    else if (tristate_button==2)
-    {
-        ui->start->setText("Start");
-        tristate_button=0;
-        for (int x=0;x<17;x++)
-            for(int y=0;y<16384;y++)
-            {
-                spectra1_rt[x][y]=0;
-                spectra2_rt[x][y]=0;
-                spectra3_rt[x][y]=0;
-            }
-    }
-    ui->lcd_display->start_stop_lcdnumber();
+//    ui->lcd_display->start_stop_lcdnumber();
 }
 
-void Spectra::on_convert_clicked()
+void timed_spectra::on_convert_clicked()
 {
 
     long **bin = new long*[17];
@@ -465,7 +469,7 @@ void Spectra::on_convert_clicked()
      fclose(pFile_timestamp);
 }
 
-void Spectra::on_set_file_clicked()
+void timed_spectra::on_set_file_clicked()
 {
     filename=ui->file_name->text().toStdString();
     dirname=ui->directory_name->text().toStdString();
@@ -476,7 +480,7 @@ void Spectra::on_set_file_clicked()
     setting.endGroup();
 }
 
-void Spectra::on_pushButton_clicked()//refresh button
+void timed_spectra::on_pushButton_clicked()//refresh button
 {
     int n_sfera=ui->sfera->currentIndex();
     int n_channel=ui->comboBox->currentIndex();
@@ -554,13 +558,13 @@ void Spectra::on_pushButton_clicked()//refresh button
 
 }
 
-void Spectra::on_toolButton_clicked()
+void timed_spectra::on_toolButton_clicked()
 {
     QString directory=QFileDialog::getExistingDirectory(this,tr("Open Directory"),"C://",QFileDialog::ShowDirsOnly);
     ui->directory_name->setText(directory);
 }
 
-void Spectra::acquire()
+void timed_spectra::acquire()
 {
     qDebug()<< "iniziata acquisizione";
 
@@ -680,13 +684,13 @@ void Spectra::acquire()
     fclose(pFile);
 }
 
-void Spectra::stop()
+void timed_spectra::stop()
 {
     acquisition_flag=0;
     realtime_flag=0;
 }
 
-void Spectra::realtimePlot_call()
+void timed_spectra::realtimePlot_call()
 {
     realtime_flag=1;
 
@@ -699,7 +703,7 @@ void Spectra::realtimePlot_call()
 
 }
 
-void Spectra::realtimePlot()
+void timed_spectra::realtimePlot()
 {
 
 
@@ -771,7 +775,7 @@ void Spectra::realtimePlot()
 }
 
 
-void Spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
+void timed_spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
 {
 
     unsigned int temp_rt;
@@ -813,3 +817,15 @@ void Spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
 
 }
 
+
+void timed_spectra::on_set_time_clicked()
+{
+    ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
+
+    ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+}
+
+void timed_spectra::on_set_repetitions_clicked()
+{
+    num_of_repetitions=ui->spin_repetitions->value();
+}

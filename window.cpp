@@ -14,10 +14,13 @@ Window::Window(QWidget *parent) :
     QTabWidget *tab=new QTabWidget;
     Program_tab* program_tab = new Program_tab;
     Spectra* spectra = new Spectra;
+    timed_spectra* timed_spectr = new timed_spectra;
+
 
 
     tab->addTab(spectra, "Spectra");
     tab->addTab(program_tab, "Program SFERA");
+    tab->addTab(timed_spectr, "Timed Spectra");
     layout->addWidget(tab);
     this->setLayout(layout);
 
