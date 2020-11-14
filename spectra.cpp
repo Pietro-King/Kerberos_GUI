@@ -638,7 +638,7 @@ void Spectra::acquire()
 
     while(acquisition_flag==1)
     {
-        if(bytes_threshold_files>500000000)
+        if(bytes_threshold_files>500000000 & write_mode==0)
         {
             n_files++;
             std::string number_no_leading_zeros= std::to_string(n_files);

@@ -397,13 +397,16 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>190</y>
+     <y>180</y>
      <width>91</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
     <string>Set Repetitions</string>
+   </property>
+   <property name="checkable">
+    <bool>false</bool>
    </property>
   </widget>
   <widget class="QSpinBox" name="spin_repetitions">
@@ -469,6 +472,19 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>200</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Rep&gt;1 not available in this version</string>
+   </property>
   </widget>
  </widget>
  <customwidgets>

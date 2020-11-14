@@ -31,10 +31,12 @@ timed_spectra::timed_spectra(QWidget *parent) :
 
 
     ui->spin_repetitions->setValue(1);
+    ui->spin_repetitions->setRange(1,1);
     ui->spin_h->setMaximum(23);
     ui->spin_m->setMaximum(59);
     ui->spin_s->setMaximum(59);
     ui->lcd_display->forward_reverse=1;
+    ui->label_7->setStyleSheet("QLabel {  color : red; }");
 
 
     for (int i=0; i<16384; ++i)
@@ -62,6 +64,15 @@ timed_spectra::~timed_spectra()
 
 void timed_spectra::on_start_clicked()
 {
+//    if(num_of_repetitions==1)
+//        startstopresetFunction();
+//    else
+        startstopresetFunction();
+}
+
+
+void timed_spectra::startstopresetFunction()
+{
 
     if (tristate_button==0)
     {
@@ -70,9 +81,10 @@ void timed_spectra::on_start_clicked()
             ui->start->setText("Stop");
             tristate_button=1;
             //ui->logger->clear();
+
             ui->lcd_display->start_stop_reverse_lcdnumber();
             ui->lcd_display->stopping_flag=0;
-            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
+            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started\n");
             QFuture<void> reverse_timing_thread = QtConcurrent::run([&]{timing0stopper();});
             QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
             QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
@@ -83,31 +95,13 @@ void timed_spectra::on_start_clicked()
     }
     else if (tristate_button==1)
     {
-//        num_of_repetitions--;
-//        if (num_of_repetitions>0)
-//        {
-
-
-//            stop();
-//            ui->lcd_display->timer->stop();
-//            ui->start->setText("Stop");
-//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped");
-//            ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
-//            ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
-//            repetion_counter++;
-//            tristate_button=0;
-//            QFuture<void> start_recaller = QtConcurrent::run([&]{on_start_clicked();});
-
-//        }
-//        else
-//        {
             stop();
             ui->start->setText("Reset");
             ui->lcd_display->timer->stop();
-            ui->logger->append("Acquisition Stopped");
+            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped\n"+"Acquired "+QString::number(queue_num)+" bytes\n"+QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
+            //ui->logger->append("Acquired "+QString::number(queue_num)+" bytes");
+            //ui->logger->append(QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
             tristate_button=2;
-//        }
-
     }
 
     else if (tristate_button==2)
@@ -116,6 +110,7 @@ void timed_spectra::on_start_clicked()
         tristate_button=0;
         ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
         ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+        ui->logger->append("Resetting");
 
         for (int x=0;x<17;x++)
             for(int y=0;y<16384;y++)
@@ -125,11 +120,51 @@ void timed_spectra::on_start_clicked()
                 spectra3_rt[x][y]=0;
             }
     }
+}
 
+void timed_spectra::startstopreset_repetionsFunction()
+{
+
+//    if (tristate_button==0)
+//    {
+//        if (ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600 !=0)
+//        {
+//            ui->start->setText("Stop");
+//            tristate_button=1;
+//            //ui->logger->clear();
+
+//            ui->lcd_display->start_stop_reverse_lcdnumber();
+//            ui->lcd_display->stopping_flag=0;
+//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
+//            QFuture<void> reverse_timing_thread = QtConcurrent::run([&]{timing0stopper();});
+//            QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
+//            QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
+
+//        }
+//        else
+//            ui->logger->append("Set a time value first!");
+
+//    }
+//    else if (tristate_button==1)
+//    {
+//            stop();
+//            ui->start->setText("Stop");
+//            ui->lcd_display->timer->stop();
+//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped");
+//            tristate_button=0;
+//            ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
+//            ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+//            repetion_counter++;
+//            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//            //on_start_clicked();
+//    }
 
 }
+
+
 void timed_spectra::timing0stopper()
 {
+
     while(ui->lcd_display->stopping_flag==0)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -722,6 +757,7 @@ void timed_spectra::stop()
 {
     acquisition_flag=0;
     realtime_flag=0;
+    ui->lcd_display->stopping_flag=1;
 }
 
 void timed_spectra::realtimePlot_call()

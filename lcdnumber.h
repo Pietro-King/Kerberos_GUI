@@ -7,6 +7,9 @@
 #include <QTimer>
 #include <QTime>
 #include <QDateTime>
+#include <QFuture>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QtConcurrent/QtConcurrent>
 class LCDNumber: public QLCDNumber
 {
   Q_OBJECT
@@ -59,7 +62,9 @@ class LCDNumber: public QLCDNumber
 
     void start_stop_reverse_lcdnumber()
     {
+
       this->timer->start(1000);
+
     }
 
     void start_stop_lcdnumber()

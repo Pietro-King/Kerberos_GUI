@@ -152,6 +152,10 @@ private slots:
 
     void timing0stopper();
 
+    void startstopresetFunction();
+
+    void startstopreset_repetionsFunction();
+
 private:
     Ui::timed_spectra *ui;
 };
