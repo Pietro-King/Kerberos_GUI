@@ -31,7 +31,7 @@ timed_spectra::timed_spectra(QWidget *parent) :
 
 
     ui->spin_repetitions->setValue(1);
-    ui->spin_h->setMaximum(24);
+    ui->spin_h->setMaximum(23);
     ui->spin_m->setMaximum(59);
     ui->spin_s->setMaximum(59);
     ui->lcd_display->forward_reverse=1;
@@ -62,49 +62,80 @@ timed_spectra::~timed_spectra()
 
 void timed_spectra::on_start_clicked()
 {
-    ui->lcd_display->start_stop_reverse_lcdnumber();
 
-//    if (tristate_button==0)
-//    {
-//        ui->start->setText("Stop");
-//        tristate_button=1;
-//        ui->logger->clear();
+    if (tristate_button==0)
+    {
+        if (ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600 !=0)
+        {
+            ui->start->setText("Stop");
+            tristate_button=1;
+            //ui->logger->clear();
+            ui->lcd_display->start_stop_reverse_lcdnumber();
+            ui->lcd_display->stopping_flag=0;
+            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
+            QFuture<void> reverse_timing_thread = QtConcurrent::run([&]{timing0stopper();});
+            QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
+            QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
+        }
+        else
+            ui->logger->append("Set a time value first!");
+
+    }
+    else if (tristate_button==1)
+    {
+//        num_of_repetitions--;
+//        if (num_of_repetitions>0)
+//        {
 
 
-//        ui->logger->append("Acquisition Started");
+//            stop();
+//            ui->lcd_display->timer->stop();
+//            ui->start->setText("Stop");
+//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped");
+//            ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
+//            ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+//            repetion_counter++;
+//            tristate_button=0;
+//            QFuture<void> start_recaller = QtConcurrent::run([&]{on_start_clicked();});
+
+//        }
+//        else
+//        {
+            stop();
+            ui->start->setText("Reset");
+            ui->lcd_display->timer->stop();
+            ui->logger->append("Acquisition Stopped");
+            tristate_button=2;
+//        }
+
+    }
+
+    else if (tristate_button==2)
+    {
+        ui->start->setText("Start");
+        tristate_button=0;
+        ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
+        ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+
+        for (int x=0;x<17;x++)
+            for(int y=0;y<16384;y++)
+            {
+                spectra1_rt[x][y]=0;
+                spectra2_rt[x][y]=0;
+                spectra3_rt[x][y]=0;
+            }
+    }
 
 
-//        QFuture<void> acq_thread = QtConcurrent::run([&]{acquire();});
-//        QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
-//    }
-
-//    else if (tristate_button==1)
-//    {
-//        ui->start->setText("Reset");
-//        stop();
-
-//        ui->logger->append("");
-//        ui->logger->append("Acquisition Stopped");
-//        ui->logger->append("Acquired "+QString::number(queue_num)+" bytes");
-//        ui->logger->append(QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
-
-//        tristate_button=2;
-//    }
-
-//    else if (tristate_button==2)
-//    {
-//        ui->start->setText("Start");
-//        tristate_button=0;
-//        for (int x=0;x<17;x++)
-//            for(int y=0;y<16384;y++)
-//            {
-//                spectra1_rt[x][y]=0;
-//                spectra2_rt[x][y]=0;
-//                spectra3_rt[x][y]=0;
-//            }
-//    }
-
-//    ui->lcd_display->start_stop_lcdnumber();
+}
+void timed_spectra::timing0stopper()
+{
+    while(ui->lcd_display->stopping_flag==0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+    if(tristate_button==1)
+        on_start_clicked();
 }
 
 void timed_spectra::on_convert_clicked()
@@ -564,7 +595,7 @@ void timed_spectra::on_toolButton_clicked()
     ui->directory_name->setText(directory);
 }
 
-void timed_spectra::acquire()
+void timed_spectra::acquire_timed()
 {
     qDebug()<< "iniziata acquisizione";
 
@@ -582,6 +613,7 @@ void timed_spectra::acquire()
     DWORD TxBytes=bytes_num; //numero bytes trasmessi
     DWORD numDevs;
     DWORD bytes_in_queue;
+    int write_mode=ui->write_mode->currentIndex();
 
     res = FT_CreateDeviceInfoList(&num);
     queue_num=0;
@@ -624,8 +656,9 @@ void timed_spectra::acquire()
     res= FT_SetDtr(ftHandle);
     std::string file_number_string= std::string(8,'0');
     std::string binfile=dirname+"/"+filename+"_"+file_number_string+".bin";
-    //std::string binfile=dirname+"/"+filename+"_"+std::to_string(n_files)+".bin";
-    pFile = fopen ( binfile.c_str(), "w+b");
+
+    if (write_mode==0)
+        pFile = fopen ( binfile.c_str(), "w+b");
 
 
    RxBuffer_char= new unsigned char[DIM_QUEUE];
@@ -638,7 +671,7 @@ void timed_spectra::acquire()
        qDebug()<<"Start Acquisition";
     }
     acquisition_flag=1;
-    int write_mode=ui->write_mode->currentIndex();
+
     while(acquisition_flag==1)
     {
         if(bytes_threshold_files>500000000)
@@ -681,7 +714,8 @@ void timed_spectra::acquire()
         qDebug()<<"";
         qDebug()<<"";
     FT_Close(ftHandle);
-    fclose(pFile);
+    if (write_mode==0)
+        fclose(pFile);
 }
 
 void timed_spectra::stop()
@@ -821,8 +855,10 @@ void timed_spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbyt
 void timed_spectra::on_set_time_clicked()
 {
     ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
-
     ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+    repet_h=ui->spin_h->value();
+    repet_m=ui->spin_m->value();
+    repet_s=ui->spin_s->value();
 }
 
 void timed_spectra::on_set_repetitions_clicked()

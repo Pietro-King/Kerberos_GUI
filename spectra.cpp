@@ -563,6 +563,7 @@ void Spectra::on_toolButton_clicked()
 void Spectra::acquire()
 {
     qDebug()<< "iniziata acquisizione";
+    int write_mode=ui->write_mode->currentIndex();
 
     FILE * pFile;
     int n_files=0;
@@ -620,8 +621,8 @@ void Spectra::acquire()
     res= FT_SetDtr(ftHandle);
     std::string file_number_string= std::string(8,'0');
     std::string binfile=dirname+"/"+filename+"_"+file_number_string+".bin";
-    //std::string binfile=dirname+"/"+filename+"_"+std::to_string(n_files)+".bin";
-    pFile = fopen ( binfile.c_str(), "w+b");
+    if (write_mode==0)
+        pFile = fopen ( binfile.c_str(), "w+b");
 
 
    RxBuffer_char= new unsigned char[DIM_QUEUE];
@@ -634,7 +635,7 @@ void Spectra::acquire()
        qDebug()<<"Start Acquisition";
     }
     acquisition_flag=1;
-    int write_mode=ui->write_mode->currentIndex();
+
     while(acquisition_flag==1)
     {
         if(bytes_threshold_files>500000000)
@@ -677,7 +678,8 @@ void Spectra::acquire()
         qDebug()<<"";
         qDebug()<<"";
     FT_Close(ftHandle);
-    fclose(pFile);
+    if (write_mode==0)
+        fclose(pFile);
 }
 
 void Spectra::stop()

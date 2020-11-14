@@ -40,6 +40,10 @@ public:
     std::array < std::array <double,16384>,17> spectra3_rt;
 
     int num_of_repetitions=1;
+    int repetion_counter=1;
+    int repet_h=0;
+    int repet_m=0;
+    int repet_s=0;
 
 
 
@@ -122,7 +126,7 @@ public:
     ~timed_spectra();
 
     void realtimePlot_call();
-    void acquire();
+    void acquire_timed();
     void stop();
     void rt_spectra_creation(unsigned char *RxBuffer_char,int numbytes);
 
@@ -145,6 +149,8 @@ private slots:
     void on_set_time_clicked();
 
     void on_set_repetitions_clicked();
+
+    void timing0stopper();
 
 private:
     Ui::timed_spectra *ui;

@@ -6,6 +6,7 @@
 #include <QLCDNumber>
 #include <QTimer>
 #include <QTime>
+#include <QDateTime>
 class LCDNumber: public QLCDNumber
 {
   Q_OBJECT
@@ -15,11 +16,13 @@ class LCDNumber: public QLCDNumber
   QTime*  timeValue;
   int flag=0;
   int forward_reverse=0;
+  int stopping_flag=0;
 
   public:
     LCDNumber(QWidget * parentWidget)
     {
         int hours=0; int minutes=0;int seconds=0;
+
         timer = new QTimer();
         timeValue = new QTime(hours,minutes,seconds);
         this->setParent(parentWidget);
@@ -41,6 +44,12 @@ class LCDNumber: public QLCDNumber
         {
         this->timeValue->setHMS(this->timeValue->addSecs(-1).hour(),this->timeValue->addSecs(-1).minute(),this->timeValue->addSecs(-1).second());
         this->display(this->timeValue->toString("HH:mm:ss"));
+            if (this->timeValue->second()==0 && this->timeValue->minute()==0 && this->timeValue->hour()==0 )
+            {
+                this->timer->stop();
+                stopping_flag=1;
+            }
+
         }
     }
     void go()
@@ -50,7 +59,7 @@ class LCDNumber: public QLCDNumber
 
     void start_stop_reverse_lcdnumber()
     {
-
+      this->timer->start(1000);
     }
 
     void start_stop_lcdnumber()
