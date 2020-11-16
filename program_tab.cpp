@@ -177,7 +177,7 @@ void Program_tab::on_program_button_clicked()
             spi_bits.EN_HIGH_Z_LVDS_NEG=1;
             spi_bits.DELAY_TR_IN_ON=1;
             spi_bits.HALF_DELAY_TR_IN=1;
-            spi_bits.EN_AUTO_TRIGGER_GAMMA=1;
+            spi_bits.EN_AUTO_TRIGGER_GAMMA=0;
 
     }
     if(ui->mode_of_readout->currentText()=="Sparse")
@@ -193,7 +193,7 @@ void Program_tab::on_program_button_clicked()
             spi_bits.EN_HIGH_Z_LVDS_NEG=1;
             spi_bits.DELAY_TR_IN_ON=0;
             spi_bits.HALF_DELAY_TR_IN=1;
-            spi_bits.EN_AUTO_TRIGGER_GAMMA=1;
+            spi_bits.EN_AUTO_TRIGGER_GAMMA=0;
 
     }
     if(ui->mode_of_readout->currentText()=="Polling X")
