@@ -31,9 +31,11 @@ class LCDNumber: public QLCDNumber
         this->setParent(parentWidget);
         this->display(timeValue->toString("HH:mm:ss"));
         QObject::connect(timer,SIGNAL(timeout()),this,SLOT(setDisplay()));
+
     }
 
     ~LCDNumber(){}
+
 
    public slots:
     void setDisplay()
@@ -55,10 +57,7 @@ class LCDNumber: public QLCDNumber
 
         }
     }
-    void go()
-    {
-      this->timer->start(1000);
-    }
+
 
     void start_stop_reverse_lcdnumber()
     {

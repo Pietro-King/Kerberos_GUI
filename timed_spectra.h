@@ -44,6 +44,9 @@ public:
     int repet_h=0;
     int repet_m=0;
     int repet_s=0;
+    int time_of_measure=0;
+    int rt_write=0;
+    int delay_rep=0;
 
 
 
@@ -57,6 +60,8 @@ public:
     char TxBuffer_start[bytes_num]= {'C','O','M','M','A','N','D','X'};
     char TxBuffer_stop[bytes_num]= {'C','O','M','M','A','N','D','@'};
     double num_of_samples;
+    QTimer* timer_start;
+
 
 
     //
@@ -155,6 +160,11 @@ private slots:
     void startstopresetFunction();
 
     void startstopreset_repetionsFunction();
+
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
 
 private:
     Ui::timed_spectra *ui;

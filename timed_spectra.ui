@@ -42,9 +42,9 @@
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>469</x>
      <y>20</y>
-     <width>800</width>
+     <width>781</width>
      <height>600</height>
     </rect>
    </property>
@@ -150,7 +150,7 @@
   <widget class="LCDNumber" name="lcd_display">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>260</x>
      <y>220</y>
      <width>181</width>
      <height>71</height>
@@ -383,7 +383,7 @@
   <widget class="QPushButton" name="set_time">
    <property name="geometry">
     <rect>
-     <x>260</x>
+     <x>320</x>
      <y>190</y>
      <width>75</width>
      <height>23</height>
@@ -396,8 +396,8 @@
   <widget class="QPushButton" name="set_repetitions">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>180</y>
+     <x>30</x>
+     <y>190</y>
      <width>91</width>
      <height>23</height>
     </rect>
@@ -412,7 +412,7 @@
   <widget class="QSpinBox" name="spin_repetitions">
    <property name="geometry">
     <rect>
-     <x>70</x>
+     <x>50</x>
      <y>160</y>
      <width>42</width>
      <height>22</height>
@@ -422,7 +422,7 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>270</x>
      <y>160</y>
      <width>180</width>
      <height>24</height>
@@ -473,17 +473,52 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label_7">
+  <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>200</y>
-     <width>171</width>
-     <height>16</height>
+     <x>140</x>
+     <y>190</y>
+     <width>81</width>
+     <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Rep&gt;1 not available in this version</string>
+    <string>Set Delay Rep</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>160</y>
+     <width>71</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="0,10">
+    <item>
+     <widget class="QSpinBox" name="spin_delay_rep"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>sec</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>250</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Global Stop</string>
    </property>
   </widget>
  </widget>

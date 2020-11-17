@@ -31,12 +31,17 @@ timed_spectra::timed_spectra(QWidget *parent) :
 
 
     ui->spin_repetitions->setValue(1);
-    ui->spin_repetitions->setRange(1,1);
+    ui->spin_repetitions->setRange(1,100);
     ui->spin_h->setMaximum(23);
     ui->spin_m->setMaximum(59);
     ui->spin_s->setMaximum(59);
+    ui->spin_delay_rep->setMinimum(2);
+    ui->spin_delay_rep->setMaximum(10000);
     ui->lcd_display->forward_reverse=1;
-    ui->label_7->setStyleSheet("QLabel {  color : red; }");
+
+    timer_start = new QTimer();
+
+    QObject::connect(timer_start,SIGNAL(timeout()),this,SLOT(startstopreset_repetionsFunction()));
 
 
     for (int i=0; i<16384; ++i)
@@ -64,65 +69,17 @@ timed_spectra::~timed_spectra()
 
 void timed_spectra::on_start_clicked()
 {
-//    if(num_of_repetitions==1)
-//        startstopresetFunction();
-//    else
-        startstopresetFunction();
+    if (ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600 !=0)
+    {
+        time_of_measure=(ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600)*1000;
+        timer_start->start(10);
+    }
+    else
+        ui->logger->append("Set a time value first!");
 }
 
 
 void timed_spectra::startstopresetFunction()
-{
-
-    if (tristate_button==0)
-    {
-        if (ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600 !=0)
-        {
-            ui->start->setText("Stop");
-            tristate_button=1;
-            //ui->logger->clear();
-
-            ui->lcd_display->start_stop_reverse_lcdnumber();
-            ui->lcd_display->stopping_flag=0;
-            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started\n");
-            QFuture<void> reverse_timing_thread = QtConcurrent::run([&]{timing0stopper();});
-            QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
-            QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
-        }
-        else
-            ui->logger->append("Set a time value first!");
-
-    }
-    else if (tristate_button==1)
-    {
-            stop();
-            ui->start->setText("Reset");
-            ui->lcd_display->timer->stop();
-            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped\n"+"Acquired "+QString::number(queue_num)+" bytes\n"+QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
-            //ui->logger->append("Acquired "+QString::number(queue_num)+" bytes");
-            //ui->logger->append(QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
-            tristate_button=2;
-    }
-
-    else if (tristate_button==2)
-    {
-        ui->start->setText("Start");
-        tristate_button=0;
-        ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
-        ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
-        ui->logger->append("Resetting");
-
-        for (int x=0;x<17;x++)
-            for(int y=0;y<16384;y++)
-            {
-                spectra1_rt[x][y]=0;
-                spectra2_rt[x][y]=0;
-                spectra3_rt[x][y]=0;
-            }
-    }
-}
-
-void timed_spectra::startstopreset_repetionsFunction()
 {
 
 //    if (tristate_button==0)
@@ -131,15 +88,14 @@ void timed_spectra::startstopreset_repetionsFunction()
 //        {
 //            ui->start->setText("Stop");
 //            tristate_button=1;
-//            //ui->logger->clear();
+
 
 //            ui->lcd_display->start_stop_reverse_lcdnumber();
 //            ui->lcd_display->stopping_flag=0;
-//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
+//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started\n");
 //            QFuture<void> reverse_timing_thread = QtConcurrent::run([&]{timing0stopper();});
 //            QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
 //            QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
-
 //        }
 //        else
 //            ui->logger->append("Set a time value first!");
@@ -148,16 +104,85 @@ void timed_spectra::startstopreset_repetionsFunction()
 //    else if (tristate_button==1)
 //    {
 //            stop();
-//            ui->start->setText("Stop");
+//            ui->start->setText("Reset");
 //            ui->lcd_display->timer->stop();
-//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped");
-//            tristate_button=0;
-//            ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
-//            ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
-//            repetion_counter++;
-//            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-//            //on_start_clicked();
+//            ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped\n"+"Acquired "+QString::number(queue_num)+" bytes\n"+QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
+//            //ui->logger->append("Acquired "+QString::number(queue_num)+" bytes");
+//            //ui->logger->append(QString::number(floor(queue_num/196))+" burst events (if using 3 SFERA)");
+//            tristate_button=2;
 //    }
+
+//    else if (tristate_button==2)
+//    {
+//        ui->start->setText("Start");
+//        tristate_button=0;
+//        ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
+//        ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+//        ui->logger->append("Resetting");
+
+//        for (int x=0;x<17;x++)
+//            for(int y=0;y<16384;y++)
+//            {
+//                spectra1_rt[x][y]=0;
+//                spectra2_rt[x][y]=0;
+//                spectra3_rt[x][y]=0;
+//            }
+//    }
+}
+
+void timed_spectra::startstopreset_repetionsFunction()
+{
+
+    if (tristate_button==0)
+    {
+        rt_write=1;
+        timer_start->stop();
+        timer_start->start(time_of_measure);
+        ui->start->setText("Start");
+        tristate_button=1;
+        ui->lcd_display->start_stop_reverse_lcdnumber();
+        ui->logger->append("Acquisition " + QString::number(repetion_counter-1)+ " Started");
+        ui->logger->append("Current time:"+ QDateTime::currentDateTime().toString()+"\n");
+        QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
+        QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
+    }
+    else if (tristate_button==1)
+    {
+        stop();
+        timer_start->stop();
+        ui->lcd_display->timer->stop();
+
+        ui->start->setText("Start");
+        ui->logger->append("Acquisition " + QString::number(repetion_counter-1)+ " Stopped");
+        tristate_button=0;
+        ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
+        ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
+
+        for (int x=0;x<17;x++)
+            for(int y=0;y<16384;y++)
+            {
+                spectra1_rt[x][y]=0;
+                spectra2_rt[x][y]=0;
+                spectra3_rt[x][y]=0;
+            }
+
+
+
+        repetion_counter++;
+
+        if (repetion_counter <= num_of_repetitions)
+        {
+            timer_start->start(delay_rep*1000);
+            ui->logger->append("Waiting " + QString::number(delay_rep)+ " seconds before next measuremnt.");
+        }
+        else
+        {
+            ui->logger->append("Measurement Finished");
+            repetion_counter=1;
+            rt_write=0;
+        }
+
+    }
 
 }
 
@@ -212,58 +237,58 @@ void timed_spectra::on_convert_clicked()
     std::string file_number_string_convert= std::string(8,'0');
 
 
-    std::string binfile=dirname+"/"+filename+"_"+file_number_string_convert+".bin";
-    std::string txtfile01=dirname+"/"+filename+"_01.txt";
-    std::string txtfile02=dirname+"/"+filename+"_02.txt";
-    std::string txtfile03=dirname+"/"+filename+"_03.txt";
-    std::string txtfile04=dirname+"/"+filename+"_04.txt";
-    std::string txtfile05=dirname+"/"+filename+"_05.txt";
-    std::string txtfile06=dirname+"/"+filename+"_06.txt";
-    std::string txtfile07=dirname+"/"+filename+"_07.txt";
-    std::string txtfile08=dirname+"/"+filename+"_08.txt";
-    std::string txtfile09=dirname+"/"+filename+"_09.txt";
-    std::string txtfile10=dirname+"/"+filename+"_10.txt";
-    std::string txtfile11=dirname+"/"+filename+"_11.txt";
-    std::string txtfile12=dirname+"/"+filename+"_12.txt";
-    std::string txtfile13=dirname+"/"+filename+"_13.txt";
-    std::string txtfile14=dirname+"/"+filename+"_14.txt";
-    std::string txtfile15=dirname+"/"+filename+"_15.txt";
-    std::string txtfile16=dirname+"/"+filename+"_16.txt";
-    std::string txtfile17=dirname+"/"+filename+"_17.txt";
-    std::string txtfile18=dirname+"/"+filename+"_18.txt";
-    std::string txtfile19=dirname+"/"+filename+"_19.txt";
-    std::string txtfile20=dirname+"/"+filename+"_20.txt";
-    std::string txtfile21=dirname+"/"+filename+"_21.txt";
-    std::string txtfile22=dirname+"/"+filename+"_22.txt";
-    std::string txtfile23=dirname+"/"+filename+"_23.txt";
-    std::string txtfile24=dirname+"/"+filename+"_24.txt";
-    std::string txtfile25=dirname+"/"+filename+"_25.txt";
-    std::string txtfile26=dirname+"/"+filename+"_26.txt";
-    std::string txtfile27=dirname+"/"+filename+"_27.txt";
-    std::string txtfile28=dirname+"/"+filename+"_28.txt";
-    std::string txtfile29=dirname+"/"+filename+"_29.txt";
-    std::string txtfile30=dirname+"/"+filename+"_30.txt";
-    std::string txtfile31=dirname+"/"+filename+"_31.txt";
-    std::string txtfile32=dirname+"/"+filename+"_32.txt";
-    std::string txtfile33=dirname+"/"+filename+"_33.txt";
-    std::string txtfile34=dirname+"/"+filename+"_34.txt";
-    std::string txtfile35=dirname+"/"+filename+"_35.txt";
-    std::string txtfile36=dirname+"/"+filename+"_36.txt";
-    std::string txtfile37=dirname+"/"+filename+"_37.txt";
-    std::string txtfile38=dirname+"/"+filename+"_38.txt";
-    std::string txtfile39=dirname+"/"+filename+"_39.txt";
-    std::string txtfile40=dirname+"/"+filename+"_40.txt";
-    std::string txtfile41=dirname+"/"+filename+"_41.txt";
-    std::string txtfile42=dirname+"/"+filename+"_42.txt";
-    std::string txtfile43=dirname+"/"+filename+"_43.txt";
-    std::string txtfile44=dirname+"/"+filename+"_44.txt";
-    std::string txtfile45=dirname+"/"+filename+"_45.txt";
-    std::string txtfile46=dirname+"/"+filename+"_46.txt";
-    std::string txtfile47=dirname+"/"+filename+"_47.txt";
-    std::string txtfile48=dirname+"/"+filename+"_48.txt";
+    std::string binfile=dirname+"/"+filename+"_timed_"+file_number_string_convert+".bin";
+    std::string txtfile01=dirname+"/"+filename+"_timed_01.txt";
+    std::string txtfile02=dirname+"/"+filename+"_timed_02.txt";
+    std::string txtfile03=dirname+"/"+filename+"_timed_03.txt";
+    std::string txtfile04=dirname+"/"+filename+"_timed_04.txt";
+    std::string txtfile05=dirname+"/"+filename+"_timed_05.txt";
+    std::string txtfile06=dirname+"/"+filename+"_timed_06.txt";
+    std::string txtfile07=dirname+"/"+filename+"_timed_07.txt";
+    std::string txtfile08=dirname+"/"+filename+"_timed_08.txt";
+    std::string txtfile09=dirname+"/"+filename+"_timed_09.txt";
+    std::string txtfile10=dirname+"/"+filename+"_timed_10.txt";
+    std::string txtfile11=dirname+"/"+filename+"_timed_11.txt";
+    std::string txtfile12=dirname+"/"+filename+"_timed_12.txt";
+    std::string txtfile13=dirname+"/"+filename+"_timed_13.txt";
+    std::string txtfile14=dirname+"/"+filename+"_timed_14.txt";
+    std::string txtfile15=dirname+"/"+filename+"_timed_15.txt";
+    std::string txtfile16=dirname+"/"+filename+"_timed_16.txt";
+    std::string txtfile17=dirname+"/"+filename+"_timed_17.txt";
+    std::string txtfile18=dirname+"/"+filename+"_timed_18.txt";
+    std::string txtfile19=dirname+"/"+filename+"_timed_19.txt";
+    std::string txtfile20=dirname+"/"+filename+"_timed_20.txt";
+    std::string txtfile21=dirname+"/"+filename+"_timed_21.txt";
+    std::string txtfile22=dirname+"/"+filename+"_timed_22.txt";
+    std::string txtfile23=dirname+"/"+filename+"_timed_23.txt";
+    std::string txtfile24=dirname+"/"+filename+"_timed_24.txt";
+    std::string txtfile25=dirname+"/"+filename+"_timed_25.txt";
+    std::string txtfile26=dirname+"/"+filename+"_timed_26.txt";
+    std::string txtfile27=dirname+"/"+filename+"_timed_27.txt";
+    std::string txtfile28=dirname+"/"+filename+"_timed_28.txt";
+    std::string txtfile29=dirname+"/"+filename+"_timed_29.txt";
+    std::string txtfile30=dirname+"/"+filename+"_timed_30.txt";
+    std::string txtfile31=dirname+"/"+filename+"_timed_31.txt";
+    std::string txtfile32=dirname+"/"+filename+"_timed_32.txt";
+    std::string txtfile33=dirname+"/"+filename+"_timed_33.txt";
+    std::string txtfile34=dirname+"/"+filename+"_timed_34.txt";
+    std::string txtfile35=dirname+"/"+filename+"_timed_35.txt";
+    std::string txtfile36=dirname+"/"+filename+"_timed_36.txt";
+    std::string txtfile37=dirname+"/"+filename+"_timed_37.txt";
+    std::string txtfile38=dirname+"/"+filename+"_timed_38.txt";
+    std::string txtfile39=dirname+"/"+filename+"_timed_39.txt";
+    std::string txtfile40=dirname+"/"+filename+"_timed_40.txt";
+    std::string txtfile41=dirname+"/"+filename+"_timed_41.txt";
+    std::string txtfile42=dirname+"/"+filename+"_timed_42.txt";
+    std::string txtfile43=dirname+"/"+filename+"_timed_43.txt";
+    std::string txtfile44=dirname+"/"+filename+"_timed_44.txt";
+    std::string txtfile45=dirname+"/"+filename+"_timed_45.txt";
+    std::string txtfile46=dirname+"/"+filename+"_timed_46.txt";
+    std::string txtfile47=dirname+"/"+filename+"_timed_47.txt";
+    std::string txtfile48=dirname+"/"+filename+"_timed_48.txt";
 
 
-    std::string txtfile_timestamp=dirname+"/"+filename+"_timestamp.txt";
+    std::string txtfile_timestamp=dirname+"/"+filename+"_timed_timestamp.txt";
 
 
 
@@ -372,7 +397,7 @@ void timed_spectra::on_convert_clicked()
      n_files_convert++;
      std::string number_no_leading_zeros_convert= std::to_string(n_files_convert);
      file_number_string_convert = std::string(8 - number_no_leading_zeros_convert.length(), '0') + number_no_leading_zeros_convert;
-     binfile=binfile=dirname+"/"+filename+"_"+file_number_string_convert+".bin";
+     binfile=binfile=dirname+"/"+filename+"_timed_"+file_number_string_convert+".bin";
 
      pFile_read = fopen (binfile.c_str(), "rb");
 
@@ -690,7 +715,9 @@ void timed_spectra::acquire_timed()
     res =FT_ClrDtr(ftHandle);
     res= FT_SetDtr(ftHandle);
     std::string file_number_string= std::string(8,'0');
-    std::string binfile=dirname+"/"+filename+"_"+file_number_string+".bin";
+    std::string number_no_leading_zeros= std::to_string(repetion_counter-1);
+    file_number_string = std::string(8 - number_no_leading_zeros.length(), '0') + number_no_leading_zeros;
+    std::string binfile=dirname+"/"+filename+"_timed_"+file_number_string+".bin";
 
     if (write_mode==0)
         pFile = fopen ( binfile.c_str(), "w+b");
@@ -709,16 +736,6 @@ void timed_spectra::acquire_timed()
 
     while(acquisition_flag==1)
     {
-        if(bytes_threshold_files>500000000)
-        {
-            n_files++;
-            std::string number_no_leading_zeros= std::to_string(n_files);
-            file_number_string = std::string(8 - number_no_leading_zeros.length(), '0') + number_no_leading_zeros;
-            binfile=dirname+"/"+filename+"_"+file_number_string+".bin";
-            fclose(pFile);
-            pFile = fopen ( binfile.c_str(), "w+b");
-            bytes_threshold_files=0;
-        }
 
         FT_GetQueueStatus (ftHandle, &bytes_in_queue); //scrive in bytes_in_queue il numero di bytes sul buffer di ricezione
 
@@ -766,7 +783,7 @@ void timed_spectra::realtimePlot_call()
 
     while(realtime_flag==1)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
         emit refresh_plot();
     }
@@ -811,16 +828,19 @@ void timed_spectra::realtimePlot()
     ui->widget_2->rescaleAxes();
     ui->widget_2->replot();
 
-    if (ui->write_mode->currentIndex()==1)
+    if (ui->write_mode->currentIndex()==1 & rt_write==1)
     {
         std::string spectra_filename[49];
         FILE * fileSpectra[49];
+        std::string file_number_string_rt= std::string(8,'0');
+        std::string number_no_leading_zeros_rt= std::to_string(repetion_counter-1);
+        file_number_string_rt = std::string(8 - number_no_leading_zeros_rt.length(), '0') + number_no_leading_zeros_rt;
         for (int i=1;i<49;i++)
         {
             if (i<10)
-                spectra_filename[i]=dirname+"/"+filename+"_sp_0"+std::to_string(i)+".txt";
+                spectra_filename[i]=dirname+"/"+filename+"_timed_"+file_number_string_rt+"_ch_0"+std::to_string(i)+".txt";
             else
-                spectra_filename[i]=dirname+"/"+filename+"_sp_"+std::to_string(i)+".txt";
+                spectra_filename[i]=dirname+"/"+filename+"_timed_"+file_number_string_rt+"_ch_"+std::to_string(i)+".txt";
 
             fileSpectra[i] =fopen( spectra_filename[i].c_str(), "wb");
         }
@@ -900,4 +920,30 @@ void timed_spectra::on_set_time_clicked()
 void timed_spectra::on_set_repetitions_clicked()
 {
     num_of_repetitions=ui->spin_repetitions->value();
+
+}
+
+
+
+void timed_spectra::on_pushButton_2_clicked()
+{
+    delay_rep=ui->spin_delay_rep->value();
+}
+
+void timed_spectra::on_pushButton_3_clicked()
+{
+    stop();
+    timer_start->stop();
+    ui->lcd_display->timer->stop();
+    repetion_counter=1;
+    rt_write=0;
+    tristate_button=0;
+    ui->logger->append("Measurement Abruptly Stopped");
+    for (int x=0;x<17;x++)
+        for(int y=0;y<16384;y++)
+        {
+            spectra1_rt[x][y]=0;
+            spectra2_rt[x][y]=0;
+            spectra3_rt[x][y]=0;
+        }
 }
