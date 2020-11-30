@@ -571,6 +571,10 @@ void Spectra::acquire()
     int n_files=0;
     int bytes_threshold_files=0;
     int first_frame=1;
+    unsigned int temp_rt;
+    unsigned int sfera_address_rt;
+    unsigned int canale_rt;
+    unsigned int valore_rt;
 
     FT_HANDLE ftHandle;
     FT_STATUS res;
@@ -628,18 +632,18 @@ void Spectra::acquire()
         pFile = fopen ( binfile.c_str(), "w+b");
 
 
-   RxBuffer_char= new unsigned char[DIM_QUEUE];
+    RxBuffer_char= new unsigned char[DIM_QUEUE];
 
-   queue_num=0;
+    queue_num=0;
 
     res = FT_Write(ftHandle,TxBuffer_start,sizeof(TxBuffer_start),&TxBytes);
 
     if(TxBytes==8)
     {
-       qDebug()<<"Start Acquisition";
+        qDebug()<<"Start Acquisition";
     }
     acquisition_flag=1;
-    int called=0;
+
 
     while(acquisition_flag==1)
     {
@@ -658,10 +662,36 @@ void Spectra::acquire()
 
         if(bytes_in_queue>=8000 && (bytes_in_queue%4==0))
         {
-
+            //QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
             res = FT_Read(ftHandle,RxBuffer_char,bytes_in_queue,&RxBytes); //leggo il buffer di ricezione e lo scrive in RxBuffer
 
-            QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
+            for(int i=0;i<bytes_in_queue;i+=4)
+            {
+
+                temp_rt = ((int(RxBuffer_char[i])<<24) | (int(RxBuffer_char[i+1]) <<16) |  (int(RxBuffer_char[i+2])<<8) |  (int(RxBuffer_char[i+3])));
+
+
+                sfera_address_rt=temp_rt>>24;
+                canale_rt=temp_rt<<8;
+                canale_rt=canale_rt>>24;
+                valore_rt=temp_rt<<16;
+                valore_rt=valore_rt>>18;  //rebinning da 16 a 14bit
+
+
+                switch (sfera_address_rt) {
+                case 1:
+                    spectra1_rt[canale_rt][valore_rt]++;
+                    break;
+                case 2:
+                    spectra2_rt[canale_rt][valore_rt]++;
+                    break;
+                case 3:
+                    spectra3_rt[canale_rt][valore_rt]++;
+                    break;
+                default:
+                    break;
+                }
+            }
 
             if(first_frame)
             {
@@ -678,20 +708,16 @@ void Spectra::acquire()
             queue_num= queue_num+bytes_in_queue;
             bytes_threshold_files=bytes_threshold_files+bytes_in_queue;
             //qDebug()<<"Bytes in queue:"+QString::number(bytes_in_queue);
-
-
         }
-
     }
-
 
     res = FT_Write(ftHandle,TxBuffer_stop,sizeof(TxBuffer_stop),&TxBytes);
     if(TxBytes==8)
     {
         qDebug()<<"Acquisition ended";
     }
-        qDebug()<<"";
-        qDebug()<<"";
+    qDebug()<<"";
+    qDebug()<<"";
     FT_Close(ftHandle);
     if (write_mode==0)
         fclose(pFile);
@@ -723,8 +749,9 @@ void Spectra::realtimePlot()
 
     if(ui->sfera->currentIndex()==0)
     {
-        std::vector<double> temp_rt (spectra1_rt[ui->comboBox->currentIndex()+1].begin(),spectra1_rt[ui->comboBox->currentIndex()+1].end());
-        y_rt=y_rt.fromStdVector(temp_rt);
+        std::vector<double> temp_rt1 (spectra1_rt[ui->comboBox->currentIndex()+1].begin(),spectra1_rt[ui->comboBox->currentIndex()+1].end());
+        y_rt=y_rt.fromStdVector(temp_rt1);
+
 
     }
     else if(ui->sfera->currentIndex()==1)
@@ -733,11 +760,13 @@ void Spectra::realtimePlot()
         std::vector<double> temp_rt2 (spectra2_rt[ui->comboBox->currentIndex()+1].begin(),spectra2_rt[ui->comboBox->currentIndex()+1].end());
         y_rt=y_rt.fromStdVector(temp_rt2);
 
+
     }
     else if(ui->sfera->currentIndex()==2)
     {
         std::vector<double> temp_rt3 (spectra3_rt[ui->comboBox->currentIndex()+1].begin(),spectra3_rt[ui->comboBox->currentIndex()+1].end());
         y_rt=y_rt.fromStdVector(temp_rt3);
+
 
     }
 
@@ -756,7 +785,6 @@ void Spectra::realtimePlot()
     ui->widget_2->replot();
 
 
-
     if (ui->write_mode->currentIndex()==1)
     {
         std::string spectra_filename[49];
@@ -770,9 +798,6 @@ void Spectra::realtimePlot()
 
             fileSpectra[i] =fopen( spectra_filename[i].c_str(), "wb");
         }
-
-
-
 
         for (int i=1;i<17;i++)
             for(int y=0;y<16384;y++)
@@ -796,39 +821,39 @@ void Spectra::realtimePlot()
 void Spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
 {
 
-    unsigned int temp_rt;
-    unsigned int sfera_address_rt;
-    unsigned int canale_rt;
-    unsigned int valore_rt;
-    //qDebug()<<"Real time read:"+QString::number(numbytes);
+//    unsigned int temp_rt;
+//    unsigned int sfera_address_rt;
+//    unsigned int canale_rt;
+//    unsigned int valore_rt;
+//    //qDebug()<<"Real time read:"+QString::number(numbytes);
 
-    for(int i=0;i<numbytes;i+=4)
-    {
+//    for(int i=0;i<numbytes;i+=4)
+//    {
 
-        temp_rt = ((int(RxBuffer_char[i])<<24) | (int(RxBuffer_char[i+1]) <<16) |  (int(RxBuffer_char[i+2])<<8) |  (int(RxBuffer_char[i+3])));
-
-
-        sfera_address_rt=temp_rt>>24;
-        canale_rt=temp_rt<<8;
-        canale_rt=canale_rt>>24;
-        valore_rt=temp_rt<<16;
-        valore_rt=valore_rt>>18;  //rebinning da 16 a 14bit
+//        temp_rt = ((int(RxBuffer_char[i])<<24) | (int(RxBuffer_char[i+1]) <<16) |  (int(RxBuffer_char[i+2])<<8) |  (int(RxBuffer_char[i+3])));
 
 
-        switch (sfera_address_rt) {
-        case 1:
-            spectra1_rt[canale_rt][valore_rt]++;
-            break;
-        case 2:
-            spectra2_rt[canale_rt][valore_rt]++;
-            break;
-        case 3:
-            spectra3_rt[canale_rt][valore_rt]++;
-            break;
-        default:
-            break;
-        }
-    }
+//        sfera_address_rt=temp_rt>>24;
+//        canale_rt=temp_rt<<8;
+//        canale_rt=canale_rt>>24;
+//        valore_rt=temp_rt<<16;
+//        valore_rt=valore_rt>>18;  //rebinning da 16 a 14bit
+
+
+//        switch (sfera_address_rt) {
+//        case 1:
+//            spectra1_rt[canale_rt][valore_rt]++;
+//            break;
+//        case 2:
+//            spectra2_rt[canale_rt][valore_rt]++;
+//            break;
+//        case 3:
+//            spectra3_rt[canale_rt][valore_rt]++;
+//            break;
+//        default:
+//            break;
+//        }
+//    }
     //qDebug()<<"thread:"+QString::number(real_time_called);
 
 

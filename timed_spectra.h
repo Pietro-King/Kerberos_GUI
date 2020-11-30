@@ -39,6 +39,10 @@ public:
     std::array < std::array <double,16384>,17> spectra2_rt;
     std::array < std::array <double,16384>,17> spectra3_rt;
 
+    std::array < std::array <double,16384>,17> spectra1_rt_temp;
+    std::array < std::array <double,16384>,17> spectra2_rt_temp;
+    std::array < std::array <double,16384>,17> spectra3_rt_temp;
+
     int num_of_repetitions=1;
     int repetion_counter=1;
     int repet_h=0;
