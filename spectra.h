@@ -38,13 +38,15 @@ public:
     std::array < std::array <double,16384>,17> spectra2_rt;
     std::array < std::array <double,16384>,17> spectra3_rt;
 
+    int real_time_called=0;
+
 
 
 
 
     //parte di acq
     double queue_num=0;
-    //unsigned char *RxBuffer_char;
+
     int acquisition_flag=0;
     int realtime_flag=0;
 
@@ -63,6 +65,7 @@ public:
     unsigned int *sfera_address;
     unsigned char *buffer_memory_char;
     unsigned char *RxBuffer_char;
+
     unsigned int *no_timestamp;
     float volt;
     int j=0;

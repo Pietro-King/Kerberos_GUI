@@ -662,6 +662,7 @@ void timed_spectra::acquire_timed()
     FILE * pFile;
     int n_files=0;
     int bytes_threshold_files=0;
+    int first_frame=1;
 
     FT_HANDLE ftHandle;
     FT_STATUS res;
@@ -741,8 +742,16 @@ void timed_spectra::acquire_timed()
 
         if(bytes_in_queue>=8000 && (bytes_in_queue%4==0))
         {
-            QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
+
             res = FT_Read(ftHandle,RxBuffer_char,bytes_in_queue,&RxBytes); //leggo il buffer di ricezione e lo scrive in RxBuffer
+            QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
+
+            if(first_frame)
+            {
+                RxBuffer_char=RxBuffer_char+12;
+                bytes_in_queue=bytes_in_queue-12;
+                first_frame=0;
+            }
 
             if (write_mode==0)
             {

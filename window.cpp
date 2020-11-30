@@ -18,9 +18,12 @@ Window::Window(QWidget *parent) :
 
 
 
+
+
     tab->addTab(spectra, "Spectra");
     tab->addTab(program_tab, "Program SFERA");
     tab->addTab(timed_spectr, "Timed Spectra");
+
     layout->addWidget(tab);
     this->setLayout(layout);
 

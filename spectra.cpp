@@ -75,6 +75,8 @@ void Spectra::on_start_clicked()
 
     else if (tristate_button==1)
     {
+
+
         ui->start->setText("Reset");
         stop();
 
@@ -568,6 +570,7 @@ void Spectra::acquire()
     FILE * pFile;
     int n_files=0;
     int bytes_threshold_files=0;
+    int first_frame=1;
 
     FT_HANDLE ftHandle;
     FT_STATUS res;
@@ -626,6 +629,7 @@ void Spectra::acquire()
 
 
    RxBuffer_char= new unsigned char[DIM_QUEUE];
+
    queue_num=0;
 
     res = FT_Write(ftHandle,TxBuffer_start,sizeof(TxBuffer_start),&TxBytes);
@@ -635,6 +639,7 @@ void Spectra::acquire()
        qDebug()<<"Start Acquisition";
     }
     acquisition_flag=1;
+    int called=0;
 
     while(acquisition_flag==1)
     {
@@ -653,8 +658,17 @@ void Spectra::acquire()
 
         if(bytes_in_queue>=8000 && (bytes_in_queue%4==0))
         {
-            QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
+
             res = FT_Read(ftHandle,RxBuffer_char,bytes_in_queue,&RxBytes); //leggo il buffer di ricezione e lo scrive in RxBuffer
+
+            QFuture<void> spectra_creation = QtConcurrent::run([&]{rt_spectra_creation(RxBuffer_char,(int)bytes_in_queue);});
+
+            if(first_frame)
+            {
+                RxBuffer_char=RxBuffer_char+12;
+                bytes_in_queue=bytes_in_queue-12;
+                first_frame=0;
+            }
 
             if (write_mode==0)
             {
@@ -663,7 +677,8 @@ void Spectra::acquire()
 
             queue_num= queue_num+bytes_in_queue;
             bytes_threshold_files=bytes_threshold_files+bytes_in_queue;
-            //qDebug()<<"bla:"+QString::number(bytes_in_queue);
+            //qDebug()<<"Bytes in queue:"+QString::number(bytes_in_queue);
+
 
         }
 
@@ -686,6 +701,7 @@ void Spectra::stop()
 {
     acquisition_flag=0;
     realtime_flag=0;
+
 }
 
 void Spectra::realtimePlot_call()
@@ -739,6 +755,8 @@ void Spectra::realtimePlot()
     ui->widget_2->rescaleAxes();
     ui->widget_2->replot();
 
+
+
     if (ui->write_mode->currentIndex()==1)
     {
         std::string spectra_filename[49];
@@ -752,6 +770,7 @@ void Spectra::realtimePlot()
 
             fileSpectra[i] =fopen( spectra_filename[i].c_str(), "wb");
         }
+
 
 
 
@@ -770,6 +789,7 @@ void Spectra::realtimePlot()
             fclose(fileSpectra[i]);
 
     }
+
 }
 
 
@@ -780,7 +800,8 @@ void Spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
     unsigned int sfera_address_rt;
     unsigned int canale_rt;
     unsigned int valore_rt;
-    //qDebug()<<"thread:"+QString::number(numbytes);
+    //qDebug()<<"Real time read:"+QString::number(numbytes);
+
     for(int i=0;i<numbytes;i+=4)
     {
 
@@ -792,9 +813,6 @@ void Spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
         canale_rt=canale_rt>>24;
         valore_rt=temp_rt<<16;
         valore_rt=valore_rt>>18;  //rebinning da 16 a 14bit
-
-        //qDebug()<<"thread:"+QString::number(sfera_address_rt);
-
 
 
         switch (sfera_address_rt) {
@@ -811,6 +829,7 @@ void Spectra::rt_spectra_creation(unsigned char *RxBuffer_char, int numbytes)
             break;
         }
     }
+    //qDebug()<<"thread:"+QString::number(real_time_called);
 
 
 }
