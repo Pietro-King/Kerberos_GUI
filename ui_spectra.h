@@ -13,6 +13,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -55,6 +56,7 @@ public:
     QPushButton *set_file;
     QComboBox *write_mode;
     QLabel *label;
+    QCheckBox *overwrite_box;
 
     void setupUi(QWidget *Spectra)
     {
@@ -143,6 +145,10 @@ public:
         label = new QLabel(Spectra);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(120, 130, 42, 22));
+        overwrite_box = new QCheckBox(Spectra);
+        overwrite_box->setObjectName(QStringLiteral("overwrite_box"));
+        overwrite_box->setGeometry(QRect(350, 80, 101, 17));
+        overwrite_box->setChecked(true);
 
         retranslateUi(Spectra);
 
@@ -206,6 +212,7 @@ public:
          << QApplication::translate("Spectra", "Spectra Mode", Q_NULLPTR)
         );
         label->setText(QApplication::translate("Spectra", "Write in:", Q_NULLPTR));
+        overwrite_box->setText(QApplication::translate("Spectra", "Overwrite Alert", Q_NULLPTR));
     } // retranslateUi
 
 };

@@ -11,6 +11,9 @@
 #include <vector>
 #include <QVector>
 #include <iostream>
+#include <QMessageBox>
+#include <QInputDialog>
+
 
 namespace Ui {
 class Spectra;

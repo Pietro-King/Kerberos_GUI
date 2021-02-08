@@ -51,6 +51,7 @@ public:
     int time_of_measure=0;
     int rt_write=0;
     int delay_rep=0;
+    int exit_flag=0;
 
 
 

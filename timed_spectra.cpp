@@ -31,13 +31,19 @@ timed_spectra::timed_spectra(QWidget *parent) :
 
 
     ui->spin_repetitions->setValue(1);
-    ui->spin_repetitions->setRange(1,100);
+    ui->spin_repetitions->setRange(1,1000000);
     ui->spin_h->setMaximum(23);
     ui->spin_m->setMaximum(59);
     ui->spin_s->setMaximum(59);
     ui->spin_delay_rep->setMinimum(2);
-    ui->spin_delay_rep->setMaximum(10000);
+    ui->spin_delay_rep->setMaximum(1000000);
     ui->lcd_display->forward_reverse=1;
+
+    ui->set_file->setVisible(false);
+    ui->set_time->setVisible(true);
+    ui->set_time->setText("Set time");
+    ui->set_repetitions->setVisible(false);
+    ui->pushButton_2->setVisible(false);
 
     timer_start = new QTimer();
 
@@ -71,6 +77,38 @@ void timed_spectra::on_start_clicked()
 {
     if (ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600 !=0)
     {
+        if(ui->overwrite_box->isChecked()==1 && filename==ui->file_name->text().toStdString() && dirname==ui->directory_name->text().toStdString() && repetion_counter<2)
+        {
+            switch( QMessageBox::question(
+                        this,
+                        tr("Overwriting File"),
+                        tr("You are overwriting a previously created file. ")+ QString::fromStdString(dirname)+"/"+QString::fromStdString(filename) + tr(". Do you want to continue?."),
+
+                        QMessageBox::Yes |
+                        QMessageBox::No  ) )
+            {
+            case QMessageBox::Yes:
+                break;
+            case QMessageBox::No:
+                return;
+                break;
+            default:
+                return;
+                break;
+            }
+        }
+
+        filename=ui->file_name->text().toStdString();
+        dirname=ui->directory_name->text().toStdString();
+        QSettings setting("MyComp","MyApp");
+        setting.beginGroup("Filenames");
+        setting.setValue("1",ui->file_name->text());
+        setting.setValue("2",ui->directory_name->text());
+        setting.endGroup();
+
+        on_set_repetitions_clicked();
+        on_pushButton_2_clicked();
+
         time_of_measure=(ui->lcd_display->timeValue->second() + ui->lcd_display->timeValue->minute()*60 + ui->lcd_display->timeValue->hour()*3600)*1000;
         timer_start->start(10);
     }
@@ -135,14 +173,13 @@ void timed_spectra::startstopreset_repetionsFunction()
 
     if (tristate_button==0)
     {
-
         rt_write=1;
         timer_start->stop();
         timer_start->start(time_of_measure);
         ui->start->setText("Start");
         tristate_button=1;
         ui->lcd_display->start_stop_reverse_lcdnumber();
-        ui->logger->append("Acquisition " + QString::number(repetion_counter-1)+ " Started");
+        ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
         ui->logger->append("Current time:"+ QDateTime::currentDateTime().toString()+"\n");
         QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
         QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
@@ -154,7 +191,7 @@ void timed_spectra::startstopreset_repetionsFunction()
         ui->lcd_display->timer->stop();
 
         ui->start->setText("Start");
-        ui->logger->append("Acquisition " + QString::number(repetion_counter-1)+ " Stopped");
+        ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped");
         tristate_button=0;
         ui->lcd_display->timeValue->setHMS(ui->spin_h->value(),ui->spin_m->value(),ui->spin_s->value());
         ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
@@ -966,7 +1003,6 @@ void timed_spectra::on_set_repetitions_clicked()
     num_of_repetitions=ui->spin_repetitions->value();
 
 }
-
 
 
 void timed_spectra::on_pushButton_2_clicked()

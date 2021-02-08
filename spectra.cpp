@@ -30,6 +30,8 @@ Spectra::Spectra(QWidget *parent) :
     y_rt.resize(16384);
     ui->lcd_display->forward_reverse=0;
 
+    ui->set_file->setVisible(false);
+
 
 
     for (int i=0; i<16384; ++i)
@@ -60,6 +62,36 @@ void Spectra::on_start_clicked()
 {
     if (tristate_button==0)
     {
+        if(ui->overwrite_box->isChecked()==1 && filename==ui->file_name->text().toStdString() && dirname==ui->directory_name->text().toStdString())
+        {
+            switch( QMessageBox::question(
+                        this,
+                        tr("Overwriting File"),
+                        tr("You are overwriting a previously created file. ")+ QString::fromStdString(dirname)+"/"+QString::fromStdString(filename) + tr(". Do you want to continue?."),
+
+                        QMessageBox::Yes |
+                        QMessageBox::No  ) )
+            {
+            case QMessageBox::Yes:
+                break;
+            case QMessageBox::No:
+                return;
+                break;
+            default:
+                return;
+                break;
+            }
+        }
+
+        filename=ui->file_name->text().toStdString();
+        dirname=ui->directory_name->text().toStdString();
+        QSettings setting("MyComp","MyApp");
+        setting.beginGroup("Filenames");
+        setting.setValue("1",ui->file_name->text());
+        setting.setValue("2",ui->directory_name->text());
+        setting.endGroup();
+
+
         ui->start->setText("Stop");
         tristate_button=1;
         ui->logger->clear();
@@ -469,13 +501,40 @@ void Spectra::on_convert_clicked()
 
 void Spectra::on_set_file_clicked()
 {
-    filename=ui->file_name->text().toStdString();
-    dirname=ui->directory_name->text().toStdString();
-    QSettings setting("MyComp","MyApp");
-    setting.beginGroup("Filenames");
-    setting.setValue("1",ui->file_name->text());
-    setting.setValue("2",ui->directory_name->text());
-    setting.endGroup();
+//    filename=ui->file_name->text().toStdString();
+//    dirname=ui->directory_name->text().toStdString();
+//    QSettings setting("MyComp","MyApp");
+//    setting.beginGroup("Filenames");
+//    setting.setValue("1",ui->file_name->text());
+//    setting.setValue("2",ui->directory_name->text());
+//    setting.endGroup();
+
+//    switch( QMessageBox::question(
+//                this,
+//                tr("Overwriting File"),
+//                tr("You are overwriting a previously created file. Do you want to continue?."),
+
+//                QMessageBox::Yes |
+//                QMessageBox::No |
+//                QMessageBox::Cancel,
+
+//                QMessageBox::Cancel ) )
+//    {
+//      case QMessageBox::Yes:
+//        qDebug( "yes" );
+//        break;
+//      case QMessageBox::No:
+//        qDebug( "no" );
+//        break;
+//      case QMessageBox::Cancel:
+//        qDebug( "cancel" );
+//        break;
+//      default:
+//        qDebug( "close" );
+//        break;
+//    }
+
+
 }
 
 void Spectra::on_pushButton_clicked()//refresh button
