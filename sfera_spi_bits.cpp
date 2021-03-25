@@ -45,7 +45,7 @@ Sfera_SPI_bits::create_bitstream()
     temp[30]=PROG_CHECK_5<<7 |PROG_CHECK_4<<6 |PROG_CHECK_3<<5 |PROG_CHECK_2<<4 |PROG_CHECK_1<<3 |PROG_CHECK_0<<2 |BIT_247<<1 | BIT_248 ;
     temp[31]=BIT_249<<7 | BIT_250<<6 | BIT_251<<5 |BIT_252<<4 | BIT_253<<3 | BIT_254<<2 | BIT_255<<1 |BIT_256;
 
-    temp[32]=TIMESTAMP_RES_2<<7 |TIMESTAMP_RES_1<<6 |TIMESTAMP_RES_0<<5 |bool(0)<<4 |bool(0)<<3 |bool(0)<<2 |bool(0)<<1 |bool(0);
+    temp[32]=INH_DURATION_2<<7 |INH_DURATION_1<<6 |INH_DURATION_0<<5 |bool(0)<<4 |bool(0)<<3 |bool(0)<<2 |bool(0)<<1 |bool(0);
     temp[33]=0;
     temp[34]=0;
     temp[35]=0;

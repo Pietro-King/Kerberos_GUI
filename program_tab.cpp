@@ -52,6 +52,7 @@ void Program_tab::saveSettings(){
     setting.setValue("33",ui->DAC_OFFSET_FAST->currentIndex());
     setting.setValue("34",ui->THR_CUBE->currentIndex());
     setting.setValue("35",ui->NO_SELECT->isChecked());
+    setting.setValue("36",ui->inh_duration->currentIndex());
     setting.endGroup();
 }
 
@@ -94,6 +95,7 @@ void Program_tab::loadSettings(){
     ui->DAC_OFFSET_FAST->setCurrentIndex(setting.value("33").toInt());
     ui->THR_CUBE->setCurrentIndex(setting.value("34").toInt());
     ui->NO_SELECT->setChecked(setting.value("35").toBool());
+    ui->inh_duration->setCurrentIndex(setting.value("36").toInt());
     //ui->VBL->setValue(setting.value("1").toDouble());
     setting.endGroup();
 }
@@ -135,6 +137,7 @@ void Program_tab::on_default_prog_clicked()
     ui->DAC_OFFSET_FAST->setCurrentIndex(17);
     ui->THR_CUBE->setCurrentIndex(12);
     ui->NO_SELECT->setChecked(0);
+    ui->inh_duration->setCurrentIndex(1);
 }
 
 void Program_tab::on_program_button_clicked()
@@ -3805,6 +3808,82 @@ void Program_tab::on_program_button_clicked()
 
         qDebug()<<ui->THR_CUBE->currentText(); ui->logview->append(ui->THR_CUBE->currentText());
     }
+
+
+
+    if(ui->inh_duration->currentText()=="5 us")
+    {
+        spi_bits.INH_DURATION_2=0;
+        spi_bits.INH_DURATION_1=0;
+        spi_bits.INH_DURATION_0=0;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="10 us")
+    {
+        spi_bits.INH_DURATION_2=0;
+        spi_bits.INH_DURATION_1=0;
+        spi_bits.INH_DURATION_0=1;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="20 us")
+    {
+        spi_bits.INH_DURATION_2=0;
+        spi_bits.INH_DURATION_1=1;
+        spi_bits.INH_DURATION_0=0;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="40 us")
+    {
+        spi_bits.INH_DURATION_2=0;
+        spi_bits.INH_DURATION_1=1;
+        spi_bits.INH_DURATION_0=1;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="60 us")
+    {
+        spi_bits.INH_DURATION_2=1;
+        spi_bits.INH_DURATION_1=0;
+        spi_bits.INH_DURATION_0=0;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="80 us")
+    {
+        spi_bits.INH_DURATION_2=1;
+        spi_bits.INH_DURATION_1=0;
+        spi_bits.INH_DURATION_0=1;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="100 us")
+    {
+        spi_bits.INH_DURATION_2=1;
+        spi_bits.INH_DURATION_1=1;
+        spi_bits.INH_DURATION_0=0;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+    if(ui->inh_duration->currentText()=="150 us")
+    {
+        spi_bits.INH_DURATION_2=1;
+        spi_bits.INH_DURATION_1=1;
+        spi_bits.INH_DURATION_0=1;
+
+
+        qDebug()<<ui->inh_duration->currentText(); ui->logview->append(ui->inh_duration->currentText());
+    }
+
 
     switch (ui->BE->currentIndex()) {
     case 0:

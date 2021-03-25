@@ -33,7 +33,7 @@ public:
     bool T_PW_0=1; //preamp reset logic. change in sparse   //18_06
     bool T_PW_1=0; //preamp reset logic. change in sparse
     bool EN_CHANNEL_GND_N; //0 in sparse 1 in others
-    bool EN_SEL_17 =1; //17th mux
+    bool EN_SEL_17 =0; //17th mux
     bool PILEUP_CORR =1; //always 1
     bool KILL_LOGICA_GAMMA_B; //another control for the mode of operation. set high to use gamma
     //BYTE 3
@@ -192,9 +192,9 @@ public:
     bool BIT_255=0;
     bool BIT_256=1;
 
-    bool TIMESTAMP_RES_2=0;
-    bool TIMESTAMP_RES_1=0;
-    bool TIMESTAMP_RES_0=0;
+    bool INH_DURATION_2=0;
+    bool INH_DURATION_1=0;
+    bool INH_DURATION_0=0;
 
 
 private:

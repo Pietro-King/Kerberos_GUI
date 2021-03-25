@@ -110,6 +110,8 @@ public:
     QPushButton *program_button;
     QProgressBar *progressBar;
     QCheckBox *NO_SELECT;
+    QComboBox *inh_duration;
+    QLabel *label_2;
 
     void setupUi(QWidget *Program_tab)
     {
@@ -511,6 +513,12 @@ public:
         NO_SELECT = new QCheckBox(Program_tab);
         NO_SELECT->setObjectName(QStringLiteral("NO_SELECT"));
         NO_SELECT->setGeometry(QRect(260, 550, 63, 17));
+        inh_duration = new QComboBox(Program_tab);
+        inh_duration->setObjectName(QStringLiteral("inh_duration"));
+        inh_duration->setGeometry(QRect(360, 610, 69, 22));
+        label_2 = new QLabel(Program_tab);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setGeometry(QRect(431, 612, 101, 16));
 
         retranslateUi(Program_tab);
 
@@ -1026,6 +1034,18 @@ public:
         default_prog->setText(QApplication::translate("Program_tab", "DEFAULT", Q_NULLPTR));
         program_button->setText(QApplication::translate("Program_tab", "PROGRAM", Q_NULLPTR));
         NO_SELECT->setText(QApplication::translate("Program_tab", "NO_SEL", Q_NULLPTR));
+        inh_duration->clear();
+        inh_duration->insertItems(0, QStringList()
+         << QApplication::translate("Program_tab", "5 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "10 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "20 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "40 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "60 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "80 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "100 us", Q_NULLPTR)
+         << QApplication::translate("Program_tab", "150 us", Q_NULLPTR)
+        );
+        label_2->setText(QApplication::translate("Program_tab", "INHIBIT DURATION", Q_NULLPTR));
     } // retranslateUi
 
 };
