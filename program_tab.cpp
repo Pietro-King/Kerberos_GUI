@@ -54,6 +54,26 @@ void Program_tab::saveSettings(){
     setting.setValue("35",ui->NO_SELECT->isChecked());
     setting.setValue("36",ui->inh_duration->currentIndex());
     setting.endGroup();
+
+    QSettings setting2("MyComp","MyApp2");
+    setting2.beginGroup("Program_Sfera2");
+    setting2.setValue("1",ui->ADJ->currentText());
+    setting2.setValue("2",ui->DAC_OFFSET->currentText());
+    setting2.setValue("3",ui->EN_REF_EXT->currentText());
+    setting2.setValue("4",ui->GAIN->currentText());
+    setting2.setValue("5",ui->I_REF_SCARICA_PKS->currentText());
+    setting2.setValue("6",ui->mode_of_readout->currentText());
+    setting2.setValue("7",ui->PEAKINGTIME->currentText());
+    setting2.setValue("8",ui->PKS_MIRROR->currentText());
+    setting2.setValue("9",ui->REF_PKS->currentText());
+    setting2.setValue("10",ui->TH_REAL->currentText());
+    setting2.setValue("11",ui->POL_SH->currentText());
+    setting2.setValue("12",ui->BLH_POLO_1u->currentText());
+    setting2.setValue("13",ui->BLH_SLEW_RATE_1u->currentText());
+    setting2.setValue("14",ui->DAC_OFFSET_FAST->currentText());
+    setting2.setValue("15",ui->THR_CUBE->currentText());
+    setting2.setValue("16",ui->inh_duration->currentText());
+    setting2.endGroup();
 }
 
 void Program_tab::loadSettings(){

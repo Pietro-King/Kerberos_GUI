@@ -7,6 +7,7 @@ Spectra::Spectra(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
     ui->lcd_display->setDigitCount(9);
     ui->lcd_display->setFixedSize(185, 100);
     ui->lcd_display->display(ui->lcd_display->timeValue->toString("HH:mm:ss"));
@@ -91,7 +92,33 @@ void Spectra::on_start_clicked()
         setting.setValue("2",ui->directory_name->text());
         setting.endGroup();
 
+        QSettings setting2("MyComp","MyApp2");
+        setting2.beginGroup("Program_Sfera2");
 
+        std::string infoFilename=dirname+"/"+filename+"_info.txt";
+        infoFile.open(infoFilename,std::ios::out);
+        infoFile << "Measurement started at "+ QDateTime::currentDateTime().toString().toStdString() << std::endl;
+        infoFile << "The meas was done in "+ ui->write_mode->currentText().toStdString() << std::endl;
+        infoFile << "Settings: " << std::endl;
+
+        infoFile << "ADJ: "+ setting2.value("1").toString().toStdString() << std::endl;
+        infoFile << "GAIN: "+ setting2.value("4").toString().toStdString() << std::endl;
+        infoFile << "PEAKING TIME: "+ setting2.value("7").toString().toStdString() << std::endl;
+        infoFile << "PKS MIRROR: "+ setting2.value("8").toString().toStdString() << std::endl;
+        infoFile << "SCARICA PKS: "+ setting2.value("5").toString().toStdString() << std::endl;
+        infoFile << "REF PKS: "+ setting2.value("9").toString().toStdString() << std::endl;
+        infoFile << "DAC OFFSET: "+ setting2.value("2").toString().toStdString() << std::endl;
+        infoFile << "DAC OFFSET FAST: "+ setting2.value("14").toString().toStdString() << std::endl;
+        infoFile << "REFERENCE: "+ setting2.value("3").toString().toStdString() << std::endl;
+        infoFile << "TH REAL: "+ setting2.value("10").toString().toStdString() << std::endl;
+        infoFile << "POL SH: "+ setting2.value("11").toString().toStdString() << std::endl;
+        infoFile << "BLH POLO 1U: "+ setting2.value("12").toString().toStdString() << std::endl;
+        infoFile << "BLH SLEW RATE 1U: "+ setting2.value("13").toString().toStdString() << std::endl;
+        infoFile << "THR CUBE: "+ setting2.value("15").toString().toStdString() << std::endl;
+        infoFile << "INHIBIT DURATION: "+ setting2.value("16").toString().toStdString() << std::endl;
+
+
+        setting2.endGroup();
         ui->start->setText("Stop");
         tristate_button=1;
         ui->logger->clear();
@@ -119,6 +146,8 @@ void Spectra::on_start_clicked()
 
         tristate_button=2;
 
+        infoFile << "Measurement stopped at "+ QDateTime::currentDateTime().toString().toStdString() << std::endl;
+        infoFile.close();
 
     }
 

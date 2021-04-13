@@ -13,6 +13,8 @@
 #include <iostream>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <fstream>
+#include <iostream>
 
 
 namespace Ui {
@@ -42,6 +44,7 @@ public:
     std::array < std::array <double,16384>,17> spectra3_rt;
 
     int real_time_called=0;
+    std::ofstream infoFile;
 
 
 
