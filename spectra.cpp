@@ -721,6 +721,7 @@ void Spectra::acquire()
 
 
     RxBuffer_char= new unsigned char[DIM_QUEUE];
+    RxBuffer_char_extra= new unsigned char[DIM_QUEUE];
 
     queue_num=0;
 
@@ -806,6 +807,29 @@ void Spectra::acquire()
     }
     qDebug()<<"";
     qDebug()<<"";
+
+//    res= FT_Purge (ftHandle, FT_PURGE_RX | FT_PURGE_TX);
+//    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+
+    //extra info readout
+//    res = FT_Write(ftHandle,TxBuffer_extra,sizeof(TxBuffer_extra),&TxBytes);
+
+//    FT_GetQueueStatus (ftHandle, &bytes_in_queue);
+//    if (bytes_in_queue>1)
+//        res = FT_Read(ftHandle,RxBuffer_char_extra,bytes_in_queue,&RxBytes);
+//    qDebug()<<"Bytes extra letti"<< bytes_in_queue;
+
+//    temp_rt = ((int(RxBuffer_char_extra[0])<<24) | (int(RxBuffer_char_extra[1]) <<16) |  (int(RxBuffer_char_extra[2])<<8) |  (int(RxBuffer_char_extra[3])));
+//    qDebug()<<temp_rt;
+
+//    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+//    res = FT_Write(ftHandle,TxBuffer_extrastop,sizeof(TxBuffer_extrastop),&TxBytes);
+
+
+//    res= FT_Purge (ftHandle, FT_PURGE_RX | FT_PURGE_TX);
+//    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
     FT_Close(ftHandle);
     if (write_mode==0)
         fclose(pFile);

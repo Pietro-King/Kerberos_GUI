@@ -53,6 +53,10 @@ public:
     int delay_rep=0;
     int exit_flag=0;
 
+    std::string start_time;
+    std::string finish_time;
+    std::string comment_box;
+
 
 
 

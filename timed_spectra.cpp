@@ -181,6 +181,7 @@ void timed_spectra::startstopreset_repetionsFunction()
         ui->lcd_display->start_stop_reverse_lcdnumber();
         ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
         ui->logger->append("Current time:"+ QDateTime::currentDateTime().toString()+"\n");
+        start_time=QDateTime::currentDateTime().toString().toStdString();
         QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
         QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
     }
@@ -189,6 +190,7 @@ void timed_spectra::startstopreset_repetionsFunction()
         stop();
         timer_start->stop();
         ui->lcd_display->timer->stop();
+
 
         ui->start->setText("Start");
         ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Stopped");
@@ -926,7 +928,24 @@ void timed_spectra::realtimePlot()
             spectra1_rt_temp=spectra1_rt;
             spectra2_rt_temp=spectra2_rt;
             spectra3_rt_temp=spectra3_rt;
+        finish_time=QDateTime::currentDateTime().toString().toStdString();
+        //comment_box=ui->comment_box->;
+        //infoFile << "Measurement started at "+ QDateTime::currentDateTime().toString().toStdString() << std::endl;
 
+        if(ui->timing_box->isChecked())
+        {
+            for (int i=1;i<49;i++)
+            {
+                fprintf (fileSpectra[i], "Kerberos ch %d\n",i);
+                fprintf (fileSpectra[i], "Measurement started at: ");
+                fprintf (fileSpectra[i], "%s\n",start_time.c_str());
+                fprintf (fileSpectra[i], "Measurement finished at: ");
+                fprintf (fileSpectra[i], "%s\n",finish_time.c_str());
+                fprintf (fileSpectra[i], "Comment: \n");
+                fprintf (fileSpectra[i], "\n");
+                fprintf (fileSpectra[i], "Spectrum: \n");
+            }
+        }
         for (int i=1;i<17;i++)
             for(int y=0;y<16384;y++)
                 fprintf (fileSpectra[i], "%li, ",long(spectra1_rt_temp[i][y]));

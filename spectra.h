@@ -58,6 +58,8 @@ public:
 
     char TxBuffer_start[bytes_num]= {'C','O','M','M','A','N','D','X'};
     char TxBuffer_stop[bytes_num]= {'C','O','M','M','A','N','D','@'};
+    char TxBuffer_extra[bytes_num]= {'C','O','M','M','A','N','D','r'};
+    char TxBuffer_extrastop[bytes_num]= {'C','O','M','M','A','N','D','s'};
     double num_of_samples;
 
 
@@ -71,6 +73,7 @@ public:
     unsigned int *sfera_address;
     unsigned char *buffer_memory_char;
     unsigned char *RxBuffer_char;
+    unsigned char *RxBuffer_char_extra;
 
     unsigned int *no_timestamp;
     float volt;
