@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextBrowser>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "lcdnumber.h"
@@ -57,6 +58,9 @@ public:
     QComboBox *write_mode;
     QLabel *label;
     QCheckBox *overwrite_box;
+    QCheckBox *timing_box;
+    QTextEdit *comment_box;
+    QLabel *label_10;
 
     void setupUi(QWidget *Spectra)
     {
@@ -120,7 +124,7 @@ public:
         label_3->setGeometry(QRect(350, 30, 47, 13));
         logger = new QTextBrowser(Spectra);
         logger->setObjectName(QStringLiteral("logger"));
-        logger->setGeometry(QRect(70, 310, 351, 391));
+        logger->setGeometry(QRect(70, 380, 351, 321));
         tabWidget = new QTabWidget(Spectra);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
         tabWidget->setGeometry(QRect(480, 20, 800, 600));
@@ -149,6 +153,16 @@ public:
         overwrite_box->setObjectName(QStringLiteral("overwrite_box"));
         overwrite_box->setGeometry(QRect(350, 80, 101, 17));
         overwrite_box->setChecked(true);
+        timing_box = new QCheckBox(Spectra);
+        timing_box->setObjectName(QStringLiteral("timing_box"));
+        timing_box->setGeometry(QRect(350, 100, 101, 17));
+        timing_box->setChecked(true);
+        comment_box = new QTextEdit(Spectra);
+        comment_box->setObjectName(QStringLiteral("comment_box"));
+        comment_box->setGeometry(QRect(70, 310, 351, 41));
+        label_10 = new QLabel(Spectra);
+        label_10->setObjectName(QStringLiteral("label_10"));
+        label_10->setGeometry(QRect(80, 290, 47, 13));
 
         retranslateUi(Spectra);
 
@@ -213,6 +227,13 @@ public:
         );
         label->setText(QApplication::translate("Spectra", "Write in:", Q_NULLPTR));
         overwrite_box->setText(QApplication::translate("Spectra", "Overwrite Alert", Q_NULLPTR));
+        timing_box->setText(QApplication::translate("Spectra", "Timing Header", Q_NULLPTR));
+        comment_box->setHtml(QApplication::translate("Spectra", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", Q_NULLPTR));
+        label_10->setText(QApplication::translate("Spectra", "Comment:", Q_NULLPTR));
     } // retranslateUi
 
 };

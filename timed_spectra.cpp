@@ -181,7 +181,7 @@ void timed_spectra::startstopreset_repetionsFunction()
         ui->lcd_display->start_stop_reverse_lcdnumber();
         ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
         ui->logger->append("Current time:"+ QDateTime::currentDateTime().toString()+"\n");
-        start_time=QDateTime::currentDateTime().toString().toStdString();
+        start_time=QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
         QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
         QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
     }
@@ -928,21 +928,40 @@ void timed_spectra::realtimePlot()
             spectra1_rt_temp=spectra1_rt;
             spectra2_rt_temp=spectra2_rt;
             spectra3_rt_temp=spectra3_rt;
-        finish_time=QDateTime::currentDateTime().toString().toStdString();
-        //comment_box=ui->comment_box->;
-        //infoFile << "Measurement started at "+ QDateTime::currentDateTime().toString().toStdString() << std::endl;
 
+
+        finish_time=QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
+        comment_box=ui->comment_box->toPlainText().toStdString();
+
+        QSettings setting2("MyComp","MyApp2");
+        setting2.beginGroup("Program_Sfera2");
         if(ui->timing_box->isChecked())
         {
             for (int i=1;i<49;i++)
             {
-                fprintf (fileSpectra[i], "Kerberos ch %d\n",i);
+                fprintf (fileSpectra[i], "Kerberos ch %d\n\n",i);
                 fprintf (fileSpectra[i], "Measurement started at: ");
-                fprintf (fileSpectra[i], "%s\n",start_time.c_str());
+                fprintf (fileSpectra[i], "%s\n\n",start_time.c_str());
                 fprintf (fileSpectra[i], "Measurement finished at: ");
-                fprintf (fileSpectra[i], "%s\n",finish_time.c_str());
-                fprintf (fileSpectra[i], "Comment: \n");
-                fprintf (fileSpectra[i], "\n");
+                fprintf (fileSpectra[i], "%s\n\n",finish_time.c_str());
+                fprintf (fileSpectra[i], "SFERA Settings: \n");
+                fprintf (fileSpectra[i], "ADJ: %s\n",setting2.value("1").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "GAIN: %s\n",setting2.value("4").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "PEAKING TIME: %s\n",setting2.value("7").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "PKS MIRROR: %s\n",setting2.value("8").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "SCARICA PKS: %s\n",setting2.value("5").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "REF PKS: %s\n",setting2.value("9").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "DAC OFFSET: %s\n",setting2.value("2").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "DAC OFFSET FAST: %s\n",setting2.value("14").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "REFERENCE: %s\n",setting2.value("3").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "TH REAL: %s\n",setting2.value("10").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "POL SH: %s\n",setting2.value("11").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "BLH POLO 1U: %s\n",setting2.value("12").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "BLH SLEW RATE 1U: %s\n",setting2.value("13").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "THR CUBE: %s\n",setting2.value("15").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "INHIBIT DURATION: %s\n\n",setting2.value("16").toString().toStdString().c_str());
+                fprintf (fileSpectra[i], "Comment: ");
+                fprintf (fileSpectra[i], "%s\n\n",comment_box.c_str());
                 fprintf (fileSpectra[i], "Spectrum: \n");
             }
         }

@@ -75,6 +75,10 @@ public:
     unsigned char *RxBuffer_char;
     unsigned char *RxBuffer_char_extra;
 
+    std::string start_time;
+    std::string finish_time;
+    std::string comment_box;
+
     unsigned int *no_timestamp;
     float volt;
     int j=0;
