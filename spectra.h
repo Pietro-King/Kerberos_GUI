@@ -15,6 +15,10 @@
 #include <QInputDialog>
 #include <fstream>
 #include <iostream>
+#include <chrono>
+using namespace std::chrono;
+
+
 
 
 namespace Ui {
@@ -78,6 +82,9 @@ public:
     std::string start_time;
     std::string finish_time;
     std::string comment_box;
+    milliseconds start_time_ms;
+    milliseconds finish_time_ms;
+    milliseconds time_duration_ms;
 
     unsigned int *no_timestamp;
     float volt;

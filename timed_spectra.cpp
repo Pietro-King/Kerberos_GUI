@@ -181,7 +181,6 @@ void timed_spectra::startstopreset_repetionsFunction()
         ui->lcd_display->start_stop_reverse_lcdnumber();
         ui->logger->append("Acquisition " + QString::number(repetion_counter)+ " Started");
         ui->logger->append("Current time:"+ QDateTime::currentDateTime().toString()+"\n");
-        start_time=QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
         QFuture<void> acq_thread = QtConcurrent::run([&]{acquire_timed();});
         QFuture<void> rt_plot = QtConcurrent::run([&]{realtimePlot_call();});
     }
@@ -778,7 +777,8 @@ void timed_spectra::acquire_timed()
        qDebug()<<"Start Acquisition";
     }
     acquisition_flag=1;
-
+    start_time=QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
+    start_time_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
     while(acquisition_flag==1)
     {
 
@@ -925,13 +925,17 @@ void timed_spectra::realtimePlot()
             fileSpectra[i] =fopen( spectra_filename[i].c_str(), "wb");
         }
 
+
+        finish_time=QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
+        finish_time_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+        time_duration_ms = finish_time_ms-start_time_ms;
+        comment_box=ui->comment_box->toPlainText().toStdString();
+
             spectra1_rt_temp=spectra1_rt;
             spectra2_rt_temp=spectra2_rt;
             spectra3_rt_temp=spectra3_rt;
 
 
-        finish_time=QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
-        comment_box=ui->comment_box->toPlainText().toStdString();
 
         QSettings setting2("MyComp","MyApp2");
         setting2.beginGroup("Program_Sfera2");
@@ -941,9 +945,15 @@ void timed_spectra::realtimePlot()
             {
                 fprintf (fileSpectra[i], "Kerberos ch %d\n\n",i);
                 fprintf (fileSpectra[i], "Measurement started at: ");
-                fprintf (fileSpectra[i], "%s\n\n",start_time.c_str());
+                fprintf (fileSpectra[i], "%s\n",start_time.c_str());
+                fprintf (fileSpectra[i], "(Milliseconds from epoch: ");
+                fprintf (fileSpectra[i], "%s\n\n",std::to_string(start_time_ms.count()).c_str());
                 fprintf (fileSpectra[i], "Measurement finished at: ");
-                fprintf (fileSpectra[i], "%s\n\n",finish_time.c_str());
+                fprintf (fileSpectra[i], "%s\n",finish_time.c_str());
+                fprintf (fileSpectra[i], "(Milliseconds from epoch: ");
+                fprintf (fileSpectra[i], "%s\n\n",std::to_string(finish_time_ms.count()).c_str());
+                fprintf (fileSpectra[i], "Measurement duration : ");
+                fprintf (fileSpectra[i], "%s ms.\n\n",std::to_string(time_duration_ms.count()).c_str());
                 fprintf (fileSpectra[i], "SFERA Settings: \n");
                 fprintf (fileSpectra[i], "ADJ: %s\n",setting2.value("1").toString().toStdString().c_str());
                 fprintf (fileSpectra[i], "GAIN: %s\n",setting2.value("4").toString().toStdString().c_str());
