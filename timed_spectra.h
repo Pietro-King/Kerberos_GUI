@@ -64,6 +64,7 @@ public:
 
 
 
+
     //parte di acq
     double queue_num=0;
     //unsigned char *RxBuffer_char;

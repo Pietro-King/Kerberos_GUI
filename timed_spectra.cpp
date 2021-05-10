@@ -947,11 +947,11 @@ void timed_spectra::realtimePlot()
                 fprintf (fileSpectra[i], "Measurement started at: ");
                 fprintf (fileSpectra[i], "%s\n",start_time.c_str());
                 fprintf (fileSpectra[i], "(Milliseconds from epoch: ");
-                fprintf (fileSpectra[i], "%s\n\n",std::to_string(start_time_ms.count()).c_str());
+                fprintf (fileSpectra[i], "%s)\n\n",std::to_string(start_time_ms.count()).c_str());
                 fprintf (fileSpectra[i], "Measurement finished at: ");
                 fprintf (fileSpectra[i], "%s\n",finish_time.c_str());
                 fprintf (fileSpectra[i], "(Milliseconds from epoch: ");
-                fprintf (fileSpectra[i], "%s\n\n",std::to_string(finish_time_ms.count()).c_str());
+                fprintf (fileSpectra[i], "%s)\n\n",std::to_string(finish_time_ms.count()).c_str());
                 fprintf (fileSpectra[i], "Measurement duration : ");
                 fprintf (fileSpectra[i], "%s ms.\n\n",std::to_string(time_duration_ms.count()).c_str());
                 fprintf (fileSpectra[i], "SFERA Settings: \n");
@@ -975,16 +975,44 @@ void timed_spectra::realtimePlot()
                 fprintf (fileSpectra[i], "Spectrum: \n");
             }
         }
-        for (int i=1;i<17;i++)
-            for(int y=0;y<16384;y++)
-                fprintf (fileSpectra[i], "%li, ",long(spectra1_rt_temp[i][y]));
-        for (int i=17;i<33;i++)
-            for(int y=0;y<16384;y++)
-                fprintf (fileSpectra[i], "%li, ",long(spectra2_rt_temp[i-16][y]));
-        for (int i=33;i<49;i++)
-            for(int y=0;y<16384;y++)
-                fprintf (fileSpectra[i], "%li, ",long(spectra3_rt_temp[i-32][y]));
 
+        int y=0;
+        for (int i=1;i<17;i++)
+        {
+            for(y=0;y<16383;y++)
+            {
+                fprintf (fileSpectra[i], "%li, ",long(spectra1_rt_temp[i][y]));
+            }
+            if (y==16383)
+            {
+                qDebug()<<"ciao";
+                fprintf (fileSpectra[i], "%li.",long(spectra1_rt_temp[i][y]));
+            }
+        }
+        for (int i=17;i<33;i++)
+        {
+            for(y=0;y<16383;y++)
+            {
+                fprintf (fileSpectra[i], "%li, ",long(spectra2_rt_temp[i-16][y]));
+            }
+            if (y==16383)
+            {
+                qDebug()<<"ciao2";
+                fprintf (fileSpectra[i], "%li.",long(spectra2_rt_temp[i-16][y]));
+            }
+        }
+        for (int i=33;i<49;i++)
+        {
+            for(y=0;y<16383;y++)
+            {
+                fprintf (fileSpectra[i], "%li, ",long(spectra3_rt_temp[i-32][y]));
+            }
+            if (y==16383)
+            {
+                qDebug()<<"ciao3";
+                fprintf (fileSpectra[i], "%li.",long(spectra3_rt_temp[i-32][y]));
+            }
+        }
 
 
         for (int i=1;i<49;i++)
